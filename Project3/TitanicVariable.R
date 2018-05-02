@@ -1,7 +1,6 @@
 library(magrittr)
 
 # Read the titanicTrain data and store it in titanic
-
 getwd()
 train <- read.csv("titanicTrain.csv")
 train <- train[c(1:1000),]
