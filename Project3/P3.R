@@ -1,8 +1,9 @@
 library(e1071)
 library(magrittr)
-
-train <- read.csv("titanicTrain2.csv", stringsAsFactors = F, na.strings = c("NA", ""))
+library(caret)
+train <- read.csv("titanicTrain.csv", stringsAsFactors = F, na.strings = c("NA", ""))
 test <- read.csv("titanicQuestion.csv", stringsAsFactors = F, na.strings = c("NA", ""))
+train <- train[c(1:1000),]
 all <- rbind(train, test)
 
 #survived

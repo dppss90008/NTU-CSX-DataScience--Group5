@@ -1,7 +1,7 @@
 library(magrittr)
 
 # Read the titanicTrain data and store it in titanic
-
+getwd()
 train <- read.csv("titanicTrain.csv")
 train <- train[c(1:1000),]
 
@@ -9,6 +9,18 @@ train <- train[c(1:1000),]
 str(train)
 sapply(train, function(x) {sum(is.na(x))})
 
+
+# Pclass 
+ggplot(train[!is.na(train$survived),], aes(x = pclass, fill = survived)) +
+  geom_bar(stat='count', position='dodge') + labs(x = 'Train data') +
+  theme(legend.position="none") + theme_grey() +
+  geom_label(stat='count', aes(label=..count..))
+  
+# Sex
+ggplot(train[!is.na(train$survived),], aes(x = sex, fill = survived)) +
+  geom_bar(stat='count', position='dodge') + theme_grey() +
+  labs(x = 'Train data') +
+  geom_label(stat='count', aes(label=..count..))
 
 ## embarked ##
 train$embarked <- train$embarked %>% as.factor
