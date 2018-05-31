@@ -92,7 +92,6 @@ b1 <- ggplot(all[!is.na(all$survived),], aes(x = escape, fill = survived)) +
   labs(x = 'escape from ship') +
   geom_label(stat='count', aes(label=..count..))
 
-
 #subset of those who took on boat
 survived_boat <- subset(all, all$boat != "28")
 #see if there anyone who took on boat and didn't survive 
@@ -100,6 +99,28 @@ b2 <- ggplot(survived_boat[!is.na(survived_boat$survived),], aes(x = boat, fill 
   geom_bar(stat='count', position='dodge') +
   labs(x = 'boat_survive') + theme_grey()
 
+#-------what is the body variable tell us?
 
+#replace those data to "0"(body info is NA) and "1"(body info isn't NA)
+all$body[is.na(all$body)] <- "0"
+all$body[all$body != "0"] <- "1"
+all$body <- as.factor(all$body)
+#=== guessing there is something to do with dead people
+
+#set a subset of those which get the body's value 
+have_body <- subset(all, all$body != "0")
+#find out if those data with body info are highly related to death
+bo <- ggplot(have_body[!is.na(have_body$survived),], aes(x = body, fill = survived)) +
+  geom_bar(stat='count', position='dodge') +
+  labs(x = 'body_info') + theme_grey()
+#=== there isn't any survivor has body data
+#=== regarding from bo, it seems those who have body info all died
+
+#so we want to find out the distribution of survived and body
+bo_2 <-ggplot(all[!is.na(all$survived),], aes(x = body, fill = survived)) +
+  geom_bar(stat='count', position='dodge') + theme_grey() +
+  labs(x = 'body with death') +
+  geom_label(stat='count', aes(label=..count..))
+#=== the outcomes of these 2 plots reveal that those who got body value was definitely dead
 
 
