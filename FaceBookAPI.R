@@ -19,8 +19,8 @@ library(magrittr)
 ##############################
 
 # Crawl meassage data from facebookAPI
-token = "EAACEdEose0cBAKpgRr3xJTS8ONSZA7xyZB0y2YX3PHPl7tJWrZAzPXuKqKZCxRE911bWb9L4nUSl25UUS5kjGlzz4ZBcau5CPVa5GqK48hFwbllsWhOtZCZAI1j0DZCpM3aAK4OcnDWzhnT62HQYUPkZBktIVEanTgPIzQlzBaVAPDZAIdEi8ng3XvRMkTouic8VsZD"
-FacebookID = "enc.teia"
+token = "EAACEdEose0cBAL4jqM4tJmAICtV93Mk756ZC3d1BGWgznA6Wsn6aAwAwQzRuHbOdO4IvRgJM5GUnHWXkBuFxrp9R9bJOnTT1gCCLFFfy4ErQykjUaZBHDhn3BzcaLMVo3U0fv1SChzImGrWtSYx1fy9mGArChx4NY9k5ONMvIV1svlojSaZBPlRGvp6wJMZD"
+FacebookID = "DoctorKoWJ"
 url_1 = "https://graph.facebook.com/v2.12/"
 url_2 = "?fields=posts%7Bcomments.limit(20)%7D&access_token="
 url = paste0(url_1,FacebookID,url_2,token)
@@ -77,7 +77,7 @@ for(i in ismessageidx){
 
 # Crawl Posts data from facebookAPI
 url_1 = "https://graph.facebook.com/v3.0/"
-url_2 = "?fields=posts.limit(25)&access_token="
+url_2 = "?fields=posts.limit(200)&access_token="
 url = paste0(url_1,FacebookID,url_2,token)
 response = GET(url)
 Posts  = content(response)
@@ -85,20 +85,13 @@ Posts  = content(response)
 # Get posts/message from post <List>
 Posts <- Posts$posts$data
 
-# Get post create time
-ismessageidx
-
-Time <- c()
-for(i in ismessageidx){
-  Time <- c(Time,Posts[[i]]$created_time)
-}
-Time
-
+# Get post data
+post_data <- Posts %>% do.call(rbind,.) %>% data.frame
 
 ##################################################################
 # get shares from every post
 url_1 = "https://graph.facebook.com/v3.0/"
-url_2 = "?fields=posts.limit(25){shares}&access_token="
+url_2 = "?fields=posts.limit(200){shares}&access_token="
 url = paste0(url_1,FacebookID,url_2,token)
 response = GET(url)
 shares  = content(response)
@@ -106,10 +99,15 @@ shares <- shares$posts$data
 shares[[1]]$shares[[1]]
 
 shareCT <- c()
-for(i in c(1:25)){
+for(i in c(1:200)){
   shareCT <- c(shareCT,shares[[i]]$shares[[1]])
 }
 shareCT
 
+###################################################################
+# get 讚!!
+url_1 = "https://graph.facebook.com/v3.0/"
+url_2 = "?fields=posts.limit(200){shares}&access_token="
 
 
+url = "https://graph.facebook.com/{136845026417486_1311790355589608}/reactions?summary=total_count&access_token={EAACEdEose0cBAL4jqM4tJmAICtV93Mk756ZC3d1BGWgznA6Wsn6aAwAwQzRuHbOdO4IvRgJM5GUnHWXkBuFxrp9R9bJOnTT1gCCLFFfy4ErQykjUaZBHDhn3BzcaLMVo3U0fv1SChzImGrWtSYx1fy9mGArChx4NY9k5ONMvIV1svlojSaZBPlRGvp6wJMZD}"
