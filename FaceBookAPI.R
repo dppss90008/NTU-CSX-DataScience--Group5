@@ -19,7 +19,7 @@ library(magrittr)
 ##############################
 
 # Crawl meassage data from facebookAPI
-token = "EAACEdEose0cBAL4jqM4tJmAICtV93Mk756ZC3d1BGWgznA6Wsn6aAwAwQzRuHbOdO4IvRgJM5GUnHWXkBuFxrp9R9bJOnTT1gCCLFFfy4ErQykjUaZBHDhn3BzcaLMVo3U0fv1SChzImGrWtSYx1fy9mGArChx4NY9k5ONMvIV1svlojSaZBPlRGvp6wJMZD"
+token = "EAACEdEose0cBAE7Yq9B110eDFAj8ZBeuUY2srePiuNONJcP3NZBWIwv0T5wZCrW8HZBv45WScZB9t1XbZC61i6otU9MFMjpBNSuRDtkDZBZB5W9ys5oRl1BaHSNAYT3eYyZCBNGa9LwW14aThRV0XwwSBK7hesZBkWlD4SYHmoifhpWQjOGMiyBrzsFVaNgkV8PVkZD"
 FacebookID = "DoctorKoWJ"
 url_1 = "https://graph.facebook.com/v2.12/"
 url_2 = "?fields=posts%7Bcomments.limit(20)%7D&access_token="
@@ -97,7 +97,7 @@ response = GET(url)
 shares  = content(response)
 shares <- shares$posts$data
 shares[[1]]$shares[[1]]
-
+shares
 shareCT <- c()
 for(i in c(1:200)){
   shareCT <- c(shareCT,shares[[i]]$shares[[1]])
