@@ -2,7 +2,7 @@ library(rvest)
 library(magrittr)
 library(httr)
 
-data =read_html("https://www.ptt.cc/bbs/Gossiping/index.html") %>% html_text(trim = T)
+data =read_html("https://www.ptt.cc/bbs/Gossiping/search?page=1&q=%E6%9F%AF%E6%96%87%E5%93%B2") %>% html_text(trim = T)
 
 FindURL <- function(URL){
   session = rvest::html_session(url = URL)
@@ -23,7 +23,7 @@ FindURL <- function(URL){
   return(output)
 }
 
-result <- FindURL("https://www.ptt.cc/bbs/Gossiping/index.html")
+result <- FindURL("https://www.ptt.cc/bbs/Gossiping/search?page=1&q=%E6%9F%AF%E6%96%87%E5%93%B2")
 View(result)
 
 
