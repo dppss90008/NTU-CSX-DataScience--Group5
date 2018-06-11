@@ -1,3 +1,4 @@
+# 引用套件
 library(jsonlite)
 library(httr)
 library(magrittr)
@@ -16,12 +17,17 @@ library(magrittr)
 ##測試使用##
 #enc.teia
 
-##############################
+##########FacebookAPI#########
 
-# Crawl meassage data from facebookAPI
-token = "EAACEdEose0cBAL4jqM4tJmAICtV93Mk756ZC3d1BGWgznA6Wsn6aAwAwQzRuHbOdO4IvRgJM5GUnHWXkBuFxrp9R9bJOnTT1gCCLFFfy4ErQykjUaZBHDhn3BzcaLMVo3U0fv1SChzImGrWtSYx1fy9mGArChx4NY9k5ONMvIV1svlojSaZBPlRGvp6wJMZD"
+token = "EAACEdEose0cBAKrtaNzZBBdVMHTMr5jvNp1iRtJZCfEXEpLCZAGI9KmA8ZBvAmzn7Oy4sF9f0x4nMw9pyKn07fmaKQU2v8ioO4y7YnS7Q5yBPTwvZCxJIu68SFRCw3113lZAU2WhVSFzZBHslY83w94AXSOy8VXZBZCZBgM9LOuCi6ZChXnwE5i8rb2pJqkYltXhW4ZD"
 FacebookID = "DoctorKoWJ"
-url_1 = "https://graph.facebook.com/v2.12/"
+
+##############################
+# 暫時中止開發
+
+# Crawl meassage data from facebookAPI(every post)
+
+url_1 = "https://graph.facebook.com/v3.0/"
 url_2 = "?fields=posts%7Bcomments.limit(20)%7D&access_token="
 url = paste0(url_1,FacebookID,url_2,token)
 response = GET(url)
@@ -74,8 +80,9 @@ for(i in ismessageidx){
 }
 
 ##########################################################################
+## Crawl posts data <posts內容、分享、按讚>
 
-# Crawl Posts data from facebookAPI
+# Crawl Posts data from facebookAPI 已完成開發
 url_1 = "https://graph.facebook.com/v3.0/"
 url_2 = "?fields=posts.limit(200)&access_token="
 url = paste0(url_1,FacebookID,url_2,token)
@@ -85,18 +92,21 @@ Posts  = content(response)
 # Get posts/message from post <List>
 Posts <- Posts$posts$data
 
-# Get post data
-post_data <- Posts %>% do.call(rbind,.) %>% data.frame
+# Get post data in data.frame -> post_data
+post_data <- data.frame()
+post_data<- sapply(Posts,function(data){
+  return(cbind(data$created_time,data$message))
+}) %>% t
 
 ##################################################################
-# get shares from every post
+# get shares from every post 已完成開發
+
 url_1 = "https://graph.facebook.com/v3.0/"
 url_2 = "?fields=posts.limit(200){shares}&access_token="
 url = paste0(url_1,FacebookID,url_2,token)
 response = GET(url)
 shares  = content(response)
 shares <- shares$posts$data
-shares[[1]]$shares[[1]]
 
 shareCT <- c()
 for(i in c(1:200)){
@@ -104,7 +114,10 @@ for(i in c(1:200)){
 }
 shareCT
 
+# 整合到post_data
+post_data <- cbind(post_data,shareCT)
 ###################################################################
+
 # get 讚!!
 url_1 = "https://graph.facebook.com/v3.0/"
 url_2 = "?fields=posts.limit(200){shares}&access_token="
