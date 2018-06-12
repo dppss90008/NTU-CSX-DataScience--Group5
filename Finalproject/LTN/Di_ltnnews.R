@@ -17,7 +17,7 @@ for( i in 1: 18) {
 
 #檢視工作路徑以便存檔
 getwd()
-setwd("/Users/sunny/Documents/GitHub/courseR/final_project")
+setwd("C:\Users\Weber\Documents\GitHub\NTU-CSX-DataScience--Group5\Finalproject\LTN")
 
 #存丁守中五月新聞的網頁網址
 write.csv(may_ltnurl , "Di_mayltnpage")
