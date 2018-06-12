@@ -123,6 +123,7 @@ FindNews <- function(URL){
   
 }
 
+
 #爬一二月的新聞內文標題時間
 Output1 <- data.frame()
 for( i in 1:length(Di_JanFeblink$.)){
@@ -131,6 +132,8 @@ for( i in 1:length(Di_JanFeblink$.)){
   Output1 <- rbind(Output1,data)
   Sys.sleep(sample(1:10, 1))
 }
+
+Output1 <- cbind(Output1, Di_JanFeblink$.)
 
 #存丁的一二月新聞檔
 write.csv(Output1 , file = "Di_JanFebNews")
@@ -145,6 +148,8 @@ for( i in 1:length(Di_MarAprlink$.)){
   Sys.sleep(sample(1:10, 1))
 }
 
+Output2 <- cbind(Output2, Di_MarAprlink$.)
+
 #存丁的三四月新聞檔
 write.csv(Output2 , file = "Di_MarAprNews")
 
@@ -156,6 +161,9 @@ for( i in 1:length(Di_Maylink$.)){
   Output3 <- rbind(Output3,data)
   Sys.sleep(sample(1:10, 1))
 }
+
+Output3 <- cbind(Output3, Di_Maylink$.)
+
 
 #存丁的五月新聞檔
 write.csv(Output3 , file = "Di_MayNews")

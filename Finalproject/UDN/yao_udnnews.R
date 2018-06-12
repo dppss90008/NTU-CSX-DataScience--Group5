@@ -132,7 +132,9 @@ for( i in 1:length(Yao_JanFeblink$.)){
   Sys.sleep(sample(1:10, 1))
 }
 
-#存丁的一二月新聞檔
+Output1 <- cbind(Output1, Yao_JanFeblink$.)
+
+#存姚的一二月新聞檔
 write.csv(Output1 , file = "Yao_JanFebNews")
 
 
@@ -145,7 +147,9 @@ for( i in 1:length(Yao_MarAprlink$.)){
   Sys.sleep(sample(1:10, 1))
 }
 
-#存丁的三四月新聞檔
+Output2 <- cbind(Output2, Yao_MarAprlink$.)
+
+#存姚的三四月新聞檔
 write.csv(Output2 , file = "Yao_MarAprNews")
 
 #爬五月的新聞內文標題時間
@@ -156,6 +160,8 @@ for( i in 1:length(Yao_Maylink$.)){
   Output3 <- rbind(Output3,data)
   Sys.sleep(sample(1:10, 1))
 }
+
+Output3 <- cbind(Output3, Yao_Maylink$.)
 
 #存丁的五月新聞檔
 write.csv(Output3 , file = "Yao_MayNews")
