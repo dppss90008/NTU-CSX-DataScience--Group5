@@ -4,6 +4,7 @@ library(httr)
 library(rvest)
 library(magrittr)
 
+start_time <- system.time() 
 #爬丁守中五月新聞的網頁網址
 ltn_may_url <- "http://news.ltn.com.tw/search/?keyword=%E4%B8%81%E5%AE%88%E4%B8%AD&conditions=and&SYear=2018&SMonth=5&SDay=1&EYear=2018&EMonth=5&EDay=31&page="
 may_ltnurl <- c()
@@ -17,7 +18,7 @@ for( i in 1: 18) {
 
 #檢視工作路徑以便存檔
 getwd()
-setwd("C:\Users\Weber\Documents\GitHub\NTU-CSX-DataScience--Group5\Finalproject\LTN")
+setwd("/Users/Weber/Documents/GitHub/NTU-CSX-DataScience--Group5/Finalproject/LTN/Di")
 
 #存丁守中五月新聞的網頁網址
 write.csv(may_ltnurl , "Di_mayltnpage")
@@ -100,7 +101,7 @@ for ( m in 1:length(Di_MayLtnlink$V1)) {
   print(m)
   output <- FindNews(Di_MayLtnlink$V1[m])
   output <- cbind(output, Di_MayLtnlink$V1[m])
-  Di_MayLtnNews <- rbind(Di_MayLtnNews, Di_MayLtnlink$V1[m])
+  Di_MayLtnNews <- rbind(Di_MayLtnNews, output)
   Sys.sleep(sample(1:10, 1))
 }
 
@@ -158,7 +159,7 @@ for ( m in 1:length(Di_AprLtnlink$V1)) {
   print(m)
   output <- FindNews(Di_AprLtnlink$V1[m])
   output <- cbind(output, Di_AprLtnlink$V1[m])
-  Di_AprLtnNews <- rbind(Di_AprLtnNews, Di_AprLtnlink$V1[m])
+  Di_AprLtnNews <- rbind(Di_AprLtnNews, output)
   Sys.sleep(sample(1:10, 1))
 }
 
@@ -217,7 +218,7 @@ for ( m in 1:length(Di_MarLtnlink$V1)) {
   print(m)
   output <- FindNews(Di_MarLtnlink$V1[m])
   output <- cbind(output, Di_MarLtnlink$V1[m])
-  Di_MarLtnNews <- rbind(Di_MarLtnNews, Di_MarLtnlink$V1[m])
+  Di_MarLtnNews <- rbind(Di_MarLtnNews, output)
   Sys.sleep(sample(1:10, 1))
 }
 
@@ -275,7 +276,7 @@ for ( m in 1:length(Di_FebLtnlink$V1)) {
   print(m)
   output <- FindNews(Di_FebLtnlink$V1[m])
   output <- cbind(output, Di_FebLtnlink$V1[m])
-  Di_FebLtnNews <- rbind(Di_FebLtnNews, Di_FebLtnlink$V1[m])
+  Di_FebLtnNews <- rbind(Di_FebLtnNews, output)
   Sys.sleep(sample(1:10, 1))
 }
 
@@ -334,10 +335,12 @@ for ( m in 1:length(Di_JanLtnlink$V1)) {
   print(m)
   output <- FindNews(Di_JanLtnlink$V1[m])
   output <- cbind(output, Di_JanLtnlink$V1[m])
-  Di_JanLtnNews <- rbind(Di_JanLtnNews, Di_JanLtnlink$V1[m])
+  Di_JanLtnNews <- rbind(Di_JanLtnNews, output)
   Sys.sleep(sample(1:10, 1))
 }
 
+finish_time <- system.time()
+print(finish_time - start_time)
 #存ㄧ月每篇新聞的標題時間內文連結
 write.csv(Di_JanLtnNews, "Di_JanLtnNews")
 

@@ -17,7 +17,7 @@ for( i in 1: 55) {
 
 #檢視工作路徑以便存檔
 getwd()
-setwd("\Users\Weber\Documents\GitHub\NTU-CSX-DataScience--Group5\Finalproject\LTN")
+setwd("/Users/Weber/Documents/GitHub/NTU-CSX-DataScience--Group5/Finalproject/LTN/Ko")
 
 #存柯文哲五月新聞的網頁網址
 write.csv(may_ltnurl , "Ko_mayltnpage")
@@ -100,7 +100,7 @@ for ( m in 1:length(Ko_MayLtnlink$V1)) {
   print(m)
   output <- FindNews(Ko_MayLtnlink$V1[m])
   output <- cbind(output, Ko_MayLtnlink$V1[m])
-  Ko_MayLtnNews <- rbind(Ko_MayLtnNews, Ko_MayLtnlink$V1[m])
+  Ko_MayLtnNews <- rbind(Ko_MayLtnNews, output)
   Sys.sleep(sample(1:10, 1))
 }
 
@@ -158,7 +158,7 @@ for ( m in 1:length(Ko_AprLtnlink$V1)) {
   print(m)
   output <- FindNews(Ko_AprLtnlink$V1[m])
   output <- cbind(output, Ko_AprLtnlink$V1[m])
-  Ko_AprLtnNews <- rbind(Ko_AprLtnNews, Ko_AprLtnlink$V1[m])
+  Ko_AprLtnNews <- rbind(Ko_AprLtnNews, output)
   Sys.sleep(sample(1:10, 1))
 }
 
@@ -217,7 +217,7 @@ for ( m in 1:length(Ko_MarLtnlink$V1)) {
   print(m)
   output <- FindNews(Ko_MarLtnlink$V1[m])
   output <- cbind(output, Ko_MarLtnlink$V1[m])
-  Ko_MarLtnNews <- rbind(Ko_MarLtnNews, Ko_MarLtnlink$V1[m])
+  Ko_MarLtnNews <- rbind(Ko_MarLtnNews, output)
   Sys.sleep(sample(1:10, 1))
 }
 
@@ -275,7 +275,7 @@ for ( m in 1:length(Ko_FebLtnlink$V1)) {
   print(m)
   output <- FindNews(Ko_FebLtnlink$V1[m])
   output <- cbind(output, Ko_FebLtnlink$V1[m])
-  Ko_FebLtnNews <- rbind(Ko_FebLtnNews, Ko_FebLtnlink$V1[m])
+  Ko_FebLtnNews <- rbind(Ko_FebLtnNews, output)
   Sys.sleep(sample(1:10, 1))
 }
 
@@ -334,7 +334,7 @@ for ( m in 1:length(Ko_JanLtnlink$V1)) {
   print(m)
   output <- FindNews(Ko_JanLtnlink$V1[m])
   output <- cbind(output, Ko_JanLtnlink$V1[m])
-  Ko_JanLtnNews <- rbind(Ko_JanLtnNews, Ko_JanLtnlink$V1[m])
+  Ko_JanLtnNews <- rbind(Ko_JanLtnNews, output)
   Sys.sleep(sample(1:10, 1))
 }
 
