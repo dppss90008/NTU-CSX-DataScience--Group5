@@ -73,3 +73,42 @@ Ct_pos <- temp[temp$weight==1,3] %>% length()
 Ct_neg <- temp[temp$weight==-1,3] %>% length()
 
 Ct_pos/(Ct_pos+Ct_neg)
+
+res
+
+
+# word freq
+library(tidyr)
+library(dplyr)
+library(NLP)
+library(tm)
+library(stats)
+library(proxy)
+library(readtext)
+library(jiebaRD)
+library(jiebaR)
+library(slam)
+library(Matrix)
+library(tidytext)
+mixseg = worker()
+
+jieba_tokenizer = function(d){
+  unlist(segment(d[[1]], mixseg))
+}
+seg = lapply(docs, jieba_tokenizer)
+freqFrame = as.data.frame(table(unlist(seg)))
+
+d.corpus <- Corpus(VectorSource(seg))
+
+tdm <- TermDocumentMatrix(d.corpus)
+tf <- as.matrix(tdm)
+DF <- tidy(tf)
+row.names(DF) <- DF$.rownames
+
+# Take a look at a subset of DF
+
+
+DF <- DF %>% t
+head(DF,10)
+Data <- DF[,2:10]
+Data <- Data %>% t
