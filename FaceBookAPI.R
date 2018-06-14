@@ -19,7 +19,7 @@ library(magrittr)
 
 ##########FacebookAPI#########
 
-token = "EAACEdEose0cBAKrtaNzZBBdVMHTMr5jvNp1iRtJZCfEXEpLCZAGI9KmA8ZBvAmzn7Oy4sF9f0x4nMw9pyKn07fmaKQU2v8ioO4y7YnS7Q5yBPTwvZCxJIu68SFRCw3113lZAU2WhVSFzZBHslY83w94AXSOy8VXZBZCZBgM9LOuCi6ZChXnwE5i8rb2pJqkYltXhW4ZD"
+token = "EAACEdEose0cBACvMn2ZAZAt3TYVeZBjpN6ferukKBZACHFZAoz9gkb22VrshkvL8IXb4mZCoveJlU2MrlZBIqS4pm89k9OnJr5H9JakdZCJsuQQcQN7fh5j1lfY2KWBdSGePfQhepX86yshhGpg3ZAYWN3wHcL04kURk9QM8YmNZA3Q3vS2dMCRwUaUUfrkXxGB1kZD"
 FacebookID = "DoctorKoWJ"
 
 ##############################
@@ -120,7 +120,24 @@ post_data <- cbind(post_data,shareCT)
 
 # get 讚!!
 url_1 = "https://graph.facebook.com/v3.0/"
-url_2 = "?fields=posts.limit(200){shares}&access_token="
+url_2 = "?fields=%20%20%20posts.as(like)%7Breactions.type(LIKE).limit(0).summary(true)%7D%2C%20%20%20posts.as(love)%7Breactions.type(LOVE).limit(0).summary(true)%7D%2C%20%20%20posts.as(wow)%7Breactions.type(WOW).limit(0).summary(true)%7D%2C%20%20%20posts.as(haha)%7Breactions.type(HAHA).limit(0).summary(true)%7D%2C%20%20%20posts.as(sad)%7Breactions.type(SAD).limit(0).summary(true)%7D%2C%20%20%20posts.as(angry)%7Breactions.type(ANGRY).limit(0).summary(true)%7D%2C%20%20%20posts.as(thankful)%7Breactions.type(THANKFUL).limit(0).summary(true)%7D&access_token="
+url = paste0(url_1,FacebookID,url_2,token)
 
+retext <- fromJSON(content(GET(url), "text"))
+likedata <- retext$like$data
+lovedata <- retext$love$data
+wowdata  <- retext$wow$data
+hahadata <- retext$haha$data
+saddata  <- retext$sad$data
+angrdata <- retext$angry$data
+thandata <- retext$thankful$data
+next_likeurl <- retext$like$paging$"next"
+next_loveurl <- retext$love$paging$"next"
 
+liketext <- fromJSON(content(GET(next_likeurl), "text"))
+lovetext <- fromJSON(content(GET(next_loveurl), "text"))
+like_data <- liketext$data
+like_data <- relst$like$data
+love_data <- lovetext$data
+https://graph.facebook.com/v3.0/kobeengineer?fields=%20%20%20posts.as(like)%7Breactions.type(LIKE).limit(0).summary(true)%7D%2C%20%20%20posts.as(love)%7Breactions.type(LOVE).limit(0).summary(true)%7D%2C%20%20%20posts.as(wow)%7Breactions.type(WOW).limit(0).summary(true)%7D%2C%20%20%20posts.as(haha)%7Breactions.type(HAHA).limit(0).summary(true)%7D%2C%20%20%20posts.as(sad)%7Breactions.type(SAD).limit(0).summary(true)%7D%2C%20%20%20posts.as(angry)%7Breactions.type(ANGRY).limit(0).summary(true)%7D%2C%20%20%20posts.as(thankful)%7Breactions.type(THANKFUL).limit(0).summary(true)%7D&access_token=
 url = "https://graph.facebook.com/{136845026417486_1311790355589608}/reactions?summary=total_count&access_token={EAACEdEose0cBAL4jqM4tJmAICtV93Mk756ZC3d1BGWgznA6Wsn6aAwAwQzRuHbOdO4IvRgJM5GUnHWXkBuFxrp9R9bJOnTT1gCCLFFfy4ErQykjUaZBHDhn3BzcaLMVo3U0fv1SChzImGrWtSYx1fy9mGArChx4NY9k5ONMvIV1svlojSaZBPlRGvp6wJMZD}"
