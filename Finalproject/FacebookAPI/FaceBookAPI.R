@@ -1,4 +1,4 @@
-# 引用套件
+#### 引用套件 ####
 library(jsonlite)
 library(httr)
 library(magrittr)
@@ -18,16 +18,16 @@ library(dplyr)
 ##測試使用##
 #enc.teia
 
-##########FacebookAPI#########
+##########FacebookAPI##########
 
-token = "EAACEdEose0cBAFZBuvrE4ENjs4OFEQIcxqy4PZA3YbpxxsZAiNLpq0hJvKEZB3NkNUxJEgA1tDhOb39CTJ32wDBtXBYIAVZB1mEe2C7aZCM121QqVHCKOB9fyqoPXTMoX0v7jYzGoO0EcdVBiK2TVkpBo4m8uVH9l7sVAuz4QpR14NxHEZBYzEZBpirxK2iZAPZCYZD"
+token = "EAACEdEose0cBAHB1Dzz6MHZCa4guwG0Kx4z6SpCiA99g6GOu72NYZAAQSirSyLUVZCF7ckwW1OTJVVa6AvEe4dzyq949LJZCVqOftkw6LC4BjvmCXsHX0HypAd516mXQp0AZBoz0rilPme3NgGS3ynyD9ZAX8c1O48G7vSi3Nyyf0UMbdDAVx39ufZCXFeDtrcZD"
 FacebookID = "DoctorKoWJ"
 ## 注意 : limit請設定25的倍數
 limit <- 200
 
-## 留言 ===== 停止開發
-##############################
-# 暫時中止開發
+
+##################################################################
+## 取得留言 ===== 停止開發
 
 # Crawl meassage data from facebookAPI(every post)
 
@@ -83,8 +83,11 @@ for(i in ismessageidx){
   Output <- rbind(Output,data)  
 }
 
-##########################################################################
-## Crawl posts data <posts內容、分享、按讚>
+
+
+##################################################################
+###### Crawl posts data <posts內容、分享、按讚> ##################
+##################################################################
 
 # Crawl Posts data from facebookAPI 已完成開發
 GetPost <- function(FacebookID,limit,token){
@@ -100,14 +103,21 @@ GetPost <- function(FacebookID,limit,token){
   
   # Get post data in data.frame -> post_data
   post_data <- data.frame()
-  post_data<- sapply(Posts,function(data){
-    return(cbind(data$created_time,data$message))
-  }) %>% t 
+  time <- sapply(Posts,function(data){
+    return(data$created_time)
+  })
+  message <- sapply(Posts,function(data){
+    return(data$message %>% as.character())
+  }) %>% unlist
+  post_data <- cbind(time,message)
   return(post_data)
 }
 
-resKo <- GetPost(FacebookID,limit,token)
+Post_data <- GetPost(FacebookID,limit,token)
+#test <- Post_data %>% unlist() %>% data.frame()
+
 ##################################################################
+
 # get shares from every post 已完成開發
 
 GetShare <- function(FacebookID,limit,token){
@@ -126,10 +136,8 @@ GetShare <- function(FacebookID,limit,token){
   return(shareCT)
 }
 
-shareKo <- GetShare(FacebookID,limit,token)
+Share_data <- GetShare(FacebookID,limit,token)
 
-# 整合到post_data
-post_data <- cbind(resKo,shareKo)
 ###################################################################
 
 # get 讚!!like,love,wow,haha,sad,angry,thankful 已完成開發
@@ -160,7 +168,8 @@ Getmood <- function(FacebookID,limit,token){
   next_hahaurl <- retext$haha$paging$"next"
   next_sadurl <- retext$sad$paging$"next"
   next_angrurl <- retext$angry$paging$"next"
- 
+  
+  temp_limit <- limit
   limit <- (limit-25)/25
   library(tcltk) # 進度條
   u <- 1:limit
@@ -203,10 +212,47 @@ Getmood <- function(FacebookID,limit,token){
   }
   close(pb)  
   mood_res <- cbind(like_temp,love_temp,haha_temp,sad_temp,wow_temp,angry_temp) %>% data.frame()
-  return(mood_res)
+  return(mood_res[1:temp_limit,])
 }
 
-MoodKo <- Getmood(FacebookID,limit,token)
-# 整合到post_data
-post_data <- cbind(post_data,MoodKo)
+Mood_data <- Getmood(FacebookID,limit,token)
+
+###################################################################
+
+## 結果整合到 Report <data.frame>
+
+ Report <- cbind(Post_data,Share_data,Mood_data)
+ colnames(Report) <- c("time","post","share","like","love","haha","sad","wow","angry")
+
+###################################################################
+
+## 建立粉專套件 Search_FB_post <function>
+# 引入參數 FacebookID,Token,limit
+# 參數說明 : FacebookID = 要搜尋粉專之ID
+#            limit = 要搜尋的post個數
+#            token = 請於FacebookAPI取得token
+# 執行此function前請先建立 GetPost, GetShare, GetMood三個function
+
+Search_FB_post <- function(FacebookID,limit,token){
+  # 處理 limit非25的倍數問題 temp 儲存真實原始的limit數
+  temp_limit <- limit
+  if(limit%%25>0){
+    limit <- (ceiling(limit/25))*25
+  }
+  
+  # 使用 已建立之 function 搜尋
+  Post_data <- GetPost(FacebookID,limit,token)
+  Share_data <- GetShare(FacebookID,limit,token)
+  Mood_data <- Getmood(FacebookID,limit,token)
+  Report <- cbind(Post_data,Share_data,Mood_data)
+  colnames(Report) <- c("time","post","share","like","love","haha","sad","wow","angry")
+  return(Report[1:temp_limit,])
+}
+
+
+FacebookID = "DoctorKoWJ"
+token = "EAACEdEose0cBAEIj72iMZAAPqk1uHjhQ0ptLBMRRye1i4mZBdArFRmOlNqoJZAxy8Of9sjmVpx26utPLl0tJGHCEOGsMJijCjqG0oeo9o76drtCy8Cm9FJ6ZA6KbsOmjNXvxBphtMlRxbGtpHOidFCPWycpnOqTFBzbPAepnQ2HUA8Pm9VsbGdlGWsWacvIZD"
+limit = 30
+
+Ko_FB_Report <- Search_FB_post(FacebookID,limit,token)
 
