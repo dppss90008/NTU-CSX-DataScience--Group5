@@ -23,7 +23,7 @@ library(dplyr)
 token = "EAACEdEose0cBAFZBuvrE4ENjs4OFEQIcxqy4PZA3YbpxxsZAiNLpq0hJvKEZB3NkNUxJEgA1tDhOb39CTJ32wDBtXBYIAVZB1mEe2C7aZCM121QqVHCKOB9fyqoPXTMoX0v7jYzGoO0EcdVBiK2TVkpBo4m8uVH9l7sVAuz4QpR14NxHEZBYzEZBpirxK2iZAPZCYZD"
 FacebookID = "DoctorKoWJ"
 ## 注意 : limit請設定25的倍數
-limit <- 100
+limit <- 200
 
 ## 留言 ===== 停止開發
 ##############################
@@ -132,7 +132,7 @@ shareKo <- GetShare(FacebookID,limit,token)
 post_data <- cbind(resKo,shareKo)
 ###################################################################
 
-# get 讚!!like,love,wow,haha,sad,angry,thankful
+# get 讚!!like,love,wow,haha,sad,angry,thankful 已完成開發
 
 Getmood <- function(FacebookID,limit,token){
   url_1 = "https://graph.facebook.com/v3.0/"
@@ -162,8 +162,13 @@ Getmood <- function(FacebookID,limit,token){
   next_angrurl <- retext$angry$paging$"next"
  
   limit <- (limit-25)/25
+  library(tcltk) # 進度條
+  u <- 1:limit
+  pb <- tkProgressBar("進度","已完成 %", 0, 100) 
+  
   for( i in 1:limit) {
-    print(i)
+    info<- sprintf("已完成 %d%%", round(i*100/length(u)))  
+    setTkProgressBar(pb, i*100/length(u), sprintf("進度 (%s)", info),info)
     liketext <- fromJSON(content(GET(next_likeurl), "text"))
     lovetext <- fromJSON(content(GET(next_loveurl), "text"))
     wowtext <- fromJSON(content(GET(next_wowurl), "text"))
@@ -196,7 +201,7 @@ Getmood <- function(FacebookID,limit,token){
       
     
   }
-   
+  close(pb)  
   mood_res <- cbind(like_temp,love_temp,haha_temp,sad_temp,wow_temp,angry_temp) %>% data.frame()
   return(mood_res)
 }
