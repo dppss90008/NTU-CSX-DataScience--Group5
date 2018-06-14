@@ -1,8 +1,8 @@
 # #搜尋頁面網址爬蟲
 # rm(list = ls())
 # 
-# library(httr)
-# library(rvest)
+ library(httr)
+ library(rvest)
 # 
 # udn_head_url <- "https://udn.com/search/result/2/%E6%9F%AF%E6%96%87%E5%93%B2/"
 # url.link <- c()
@@ -105,18 +105,36 @@ for( i in 1:500){
   
 }
 
+Output5 <- data.frame()
+for( i in 2238:3240){
+  print(i)
+  data <- FindNews(news_links[i,2])
+  Output5 <- rbind(Output5,data)
+  Sys.sleep(sample(1:10,1))
+  
+}
+
+## 2237 掛掉
 
 #持續少量分次爬
 
-
+write.csv(Output5,file="Output5")
+# 跑到1886
 #爬完後cbind標題、時間、內文和連結
 Ko_udnnews <- cbind(Output, news_links$URL)
 
 #存檔
 write.csv(Ko_udnnews, file = "Ko_udnnews")
 
+data1 <- read.csv("Output1")
+data2 <- read.csv("Output2")
+data3 <- read.csv("Output3")
+data4 <- read.csv("Output4")
+data <- rbind(data1,data2,data3,data4)
+write.csv(data,"ko_Output.csv")
+write.csv(Output5,"ko_Output2.csv")
 
-
-
-
+s1 <- read.csv("ko_Output.csv")
+s2 <- read.csv("ko_Output2.csv")
+test <- data[,c(2,3,4)] %>% unique
 
