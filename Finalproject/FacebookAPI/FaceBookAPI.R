@@ -20,10 +20,10 @@ library(dplyr)
 
 ##########FacebookAPI##########
 
-token = "EAACEdEose0cBAHB1Dzz6MHZCa4guwG0Kx4z6SpCiA99g6GOu72NYZAAQSirSyLUVZCF7ckwW1OTJVVa6AvEe4dzyq949LJZCVqOftkw6LC4BjvmCXsHX0HypAd516mXQp0AZBoz0rilPme3NgGS3ynyD9ZAX8c1O48G7vSi3Nyyf0UMbdDAVx39ufZCXFeDtrcZD"
-FacebookID = "DoctorKoWJ"
+token = "EAACEdEose0cBAJ1hM3pZBh4rZB3uuGThmv3dnmhu5ZAUrDE1D9ECA0kV2tOIy73PIu82toszGIq0yXAwVZAbs3ErXLZCmzeSCf7w89sqZCSehXH2cOgpqyaL0kodS6ZCHUje0s3Pq7fSZAv5vVEd1D46ikhIvTJy9ktwD8yOz4WZAwiLccfNyZBSyldQWGs3U5bWoZD"
+FacebookID = "YaoTurningTaipei"
 ## 注意 : limit請設定25的倍數
-limit <- 200
+limit <- 300
 
 
 ##################################################################
@@ -114,6 +114,7 @@ GetPost <- function(FacebookID,limit,token){
 }
 
 Post_data <- GetPost(FacebookID,limit,token)
+
 #test <- Post_data %>% unlist() %>% data.frame()
 
 ##################################################################
@@ -216,17 +217,19 @@ Getmood <- function(FacebookID,limit,token){
 }
 
 Mood_data <- Getmood(FacebookID,limit,token)
-
+Mood_data <- Mood_data[1:290,]
 ###################################################################
 
 ## 結果整合到 Report <data.frame>
 
- Report <- cbind(Post_data,Share_data,Mood_data)
- colnames(Report) <- c("time","post","share","like","love","haha","sad","wow","angry")
+ Yao_Report <- cbind(Post_data,Share_data,Mood_data)
+ colnames(Yao_Report) <- c("time","post","share","like","love","haha","sad","wow","angry")
+ write.csv(Yao_Report,file="Yao_report.csv")
 
+ data <- read.csv("Ko_report.csv")
 ###################################################################
 
-## 建立粉專套件 Search_FB_post <function>
+## 建立粉專套件 Search_FB_post <function> >>> 停止開發
 # 引入參數 FacebookID,Token,limit
 # 參數說明 : FacebookID = 要搜尋粉專之ID
 #            limit = 要搜尋的post個數
