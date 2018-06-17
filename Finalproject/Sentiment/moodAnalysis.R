@@ -1,4 +1,4 @@
-library(stringr)
+
 library(jiebaR)
 library(jiebaRD)
 
@@ -14,6 +14,7 @@ colnames(posneg)<-c('term','weight')
 # 關閉pos 及 neg
 rm(pos)
 rm(neg)
+rm(weight)
 
 # 建立切分詞字典<NTUSD加入字典>及環境
 user<-posneg[,'term']
@@ -21,15 +22,18 @@ w1<-worker()
 new_user_word(w1,user)
 
 
-
 #### 文字清理 ####
 
 # 使用測試資料
 Data <- read.csv("Di_JanFebNews.csv")
 
+# 套件引用
 library(NLP)
+library(stringr)
 library(tm)
+library(plyr)
 
+# 文字清理
 docs <- Corpus(VectorSource(Data$V3))
 toSpace <- content_transformer(function(x,pattern){
   return(gsub(pattern," ",x))
@@ -46,13 +50,14 @@ clean_doc <- function(docs){
 docs <- clean_doc(docs)
 
 
-# 開始切詞及計算情感分數
+# 開始切詞
 
 jieba_tokenizer = function(d){
   unlist(segment(d[[1]], w1))
 }
 seg = lapply(docs, jieba_tokenizer)
 
+# 計算情感分數
 sapply(seg,function(d){
   res <- d
   temp<-data.frame()
@@ -67,4 +72,33 @@ sapply(seg,function(d){
 })
 
 
+
+#### 文字頻率 ####
+library(tidyr)
+library(dplyr)
+library(NLP)
+library(tm)
+library(stats)
+library(proxy)
+library(readtext)
+library(jiebaRD)
+library(jiebaR)
+library(slam)
+library(Matrix)
+library(tidytext)
+
+freqFrame = as.data.frame(table(unlist(seg)))
+
+d.corpus <- Corpus(VectorSource(seg))
+
+tdm <- TermDocumentMatrix(d.corpus)
+tf <- as.matrix(tdm)
+DF <- tidy(tf)
+row.names(DF) <- DF$.rownames
+## 
+
+# Take a look at a subset of DF
+
+dtm
+Data <- DF[,1:10] %>% t
 
