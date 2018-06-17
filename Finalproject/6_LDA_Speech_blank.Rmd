@@ -1,0 +1,269 @@
+---
+title: "6_LDA Speech_blank"
+output: html_notebook
+---
+# Dataset
+* https://data.gov.tw/dataset/42540 
+
+
+# Importing packages
+```{r}
+library(jiebaR)
+library(dplyr)
+library(topicmodels)
+library(tidyr)
+library(stringr)
+library(tidytext)
+```
+
+
+# Loading data
+```{r}
+docs <- readRDS("data/toChinaSpeech.rds")
+```
+
+
+
+# Word segmentation
+```{r using jiebaR}
+# add the cutter worker() to cutter data
+
+cutter <- worker()
+new_user_word(cutter, c("蔡英文"))
+docs$words <- sapply(docs$content, function(x){tryCatch({cutter[x]}, error=function(err){})})
+
+```
+
+# Loading stopWords
+```{r}
+# Load stop words
+fin <- file("data/stopwords_tw.txt", open = "r")
+stopwords <- readLines(fin , encoding = "UTF8")
+stopwords <- unique(stopwords)
+
+```
+
+# Tokenizing
+```{r}
+library(tidyr) # for unnest()
+library(stringr)
+word_token <- docs %>%
+  unnest() %>%
+  select(title, words) %>%
+  filter(!(words %in% stopwords)) %>%
+  filter(!str_detect(words, "\\d")) %>%
+  filter(nchar(words) > 1)
+	# unnest words and filter words
+```
+
+
+# Building Term-Document Matrix
+```{r tdm}
+library(tidytext)
+dtm <- word_token %>%
+  count(title, words) %>%
+  cast_dtm(title, words, n)
+
+# dtm <- cast_dtm(word_token, title, words, n)
+
+
+```
+
+
+# LDA
+```{r}
+library(topicmodels)
+dtm_lda <- LDA(dtm, k = 16, control = list(seed = 1234))
+dtm_lda4 <- LDA(dtm, k = 4, control = list(seed = 1234))
+```
+
+# Word-topic probabilities
+```{r}
+library(ggplot2)
+dtm_topics <- tidy(dtm_lda, matrix = "beta")
+
+top_terms <- dtm_topics %>%
+	group_by(topic) %>%
+	top_n(10, beta) %>%
+	ungroup() %>%
+	arrange(topic, -beta)
+
+# View(top_terms)
+
+top_terms %>%
+	mutate(term = reorder(term, beta)) %>%
+	ggplot(aes(term, beta, fill = factor(topic))) +
+	geom_col(show.legend = FALSE) +
+	facet_wrap(~ topic, scales = "free") +
+	coord_flip() +
+	theme(axis.text.y=element_text(colour="black", family="Heiti TC Light"))
+```
+## Comparing k=4
+```{r}
+dtm_topics_4 <- tidy(dtm_lda4)
+
+top_terms_4 <- dtm_topics_4 %>%
+	group_by(topic) %>%
+	top_n(10, beta) %>%
+	ungroup() %>%
+	arrange(topic, -beta)
+
+# View(top_terms_4)
+
+top_terms_4 %>%
+	mutate(term = reorder(term, beta)) %>%
+	ggplot(aes(term, beta, fill = factor(topic))) +
+	geom_col(show.legend = FALSE) +
+	facet_wrap(~ topic, scales = "free") +
+	coord_flip() +
+	theme(axis.text.y=element_text(colour="black", family="Heiti TC Light"))
+
+```
+
+
+## Evaluation
+```{r}
+perplexity(dtm_lda)
+perplexity(dtm_lda4)
+# [1] 348.7432
+# [1] 592.8917
+#算多樣性  數值越小越好
+
+
+-(0.6*log2(0.6) + 0.4*log2(0.4))
+-(0.9*log2(0.9) + 0.1*log2(0.1))
+
+#你有我也有而且數量還差不多  就是entropy很大 entropy越小越好
+
+# [1] 0.9709506
+# [1] 0.4689956
+```
+
+```{r}
+library(tidyverse)
+
+ks <- c(2, 4, 8, 14, 16, 18, 20, 24)
+#我有30個doc 我不會說我有30個的topic
+perplex <- sapply(ks, function(k){
+	lda.temp <- LDA(dtm, k =k, control = list(seed = 1109))
+	perplexity(lda.temp)
+})
+
+
+data_frame(k=ks, perplex=perplex) %>%
+	ggplot(aes(k, perplex)) +
+	geom_point() +
+	geom_line() +
+	labs(title = "Evaluating LDA topic models",
+		 subtitle = "Optimal number of topics (smaller is better)",
+		 x = "Number of topics",
+		 y = "Perplexity")
+
+```
+
+
+
+## Comparing topic1 and topic 2
+
+```{r}
+library(tidyr)
+
+beta_spread <- dtm_topics %>%
+	mutate(topic = paste0("topic", topic)) %>%
+	spread(topic, beta) %>%
+	select(term, topic1, topic2) %>%
+	filter(topic1 > .001 | topic2 > .001) %>%
+	mutate(logratio = log2(topic1 / topic2)) %>%
+	arrange(desc(logratio))
+
+beta_spread
+
+beta_spread %>%
+	group_by(logratio > 0) %>%
+	top_n(20, abs(logratio)) %>%
+	ungroup() %>%
+	mutate(term = reorder(term, logratio)) %>%
+	ggplot(aes(term, logratio, fill = logratio < 0)) +
+	geom_col() +
+	coord_flip() +
+	ylab("Topic2/Topic1 log ratio") +
+	scale_fill_manual(name = "", labels = c("topic2", "topic1"),
+					  values = c("red", "lightblue")) + 
+	theme(axis.text.y=element_text(colour="black", family="Heiti TC Light"))
+
+```
+
+# Document-topic probabilities
+```{r}
+doc_topics <- tidy(dtm_lda, matrix = "gamma") %>%
+	spread(topic, gamma)
+doc_topics
+```
+
+```{r}
+tidy(dtm) %>%
+	filter(document == "總統出席「2017大陸臺商春節聯誼活動」") %>%
+	arrange(desc(count))
+```
+
+
+
+# Building term networks
+```{r}
+
+terms <- terms(dtm_lda, 10) # get 10 terms from each topics
+class(terms)
+terms.df = as.data.frame(terms, stringsAsFactors = F)
+# terms.df[,1]
+
+# get 2-gram relationship from each topic's words
+# embed(tfs[,1], 2)[,2:1]
+
+adjacent_list = lapply(1:16, function(i) embed(terms.df[,i], 2)[, 2:1])
+edgelist = do.call(rbind, adjacent_list)
+
+library(igraph)
+g <-graph.data.frame(edgelist,directed=T )
+l<-layout.fruchterman.reingold(g)
+# nodesize = log(centralization.degree(g)$res)
+V(g)$size = log2( centralization.degree(g)$res )
+nodeLabel = V(g)$name
+E(g)$color =  unlist(lapply(sample(colors()[26:137], 16), function(i) rep(i, 9)))
+plot(g, vertex.label= nodeLabel,  edge.curved=TRUE,
+	 vertex.label.cex =0.5,  edge.arrow.size=0.1, layout=l,
+	 vertex.label.family='Heiti TC Light',)
+```
+
+# Evaluting by document distribution
+```{r}
+ks <- c(2, 4, 8, 14, 16, 18, 32, 64)
+
+lda.list <- lapply(ks, function(k){
+	lda.temp <- LDA(dtm, k =k, method="Gibbs", control = list(seed = 1109))
+	tidy.temp <- tidy(lda.temp, matrix="gamma")
+	tidy.temp$k <- k
+	tidy.temp
+})
+lda.df <- do.call(rbind, lda.list)
+
+lda.df %>%
+	group_by(k, document) %>%
+	arrange(desc(gamma)) %>%
+	slice(1) %>%
+	ungroup() %>% 
+	ggplot(aes(x=gamma, fill=factor(k))) +
+	geom_histogram(bins = 20) +
+	scale_fill_discrete(name = "Number of\nTopics") + 
+	xlab("maximum gamma per document") +
+	facet_wrap(~k) 
+```
+
+
+# Acknowledgement
+
+* This page is derived in part from “[Tidy Text Mining with R](https://www.tidytextmining.com/)” and licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License.
+* This page is derived in part from “[What is a good explanation of Latent Dirichlet Allocation?](https://www.quora.com/What-is-a-good-explanation-of-Latent-Dirichlet-Allocation)”
+* This page is dervied in part from the course "[Computing for Social Science](http://cfss.uchicago.edu/fall2016/syllabus.html)" in uChicago. 
+* https://chengjunwang.com/zh/post/cn/cn_archive/2013-09-27-topic-modeling-of-song-peom/
+* http://www.bernhardlearns.com/2017/05/topic-models-lda-and-ctm-in-r-with.html
+
