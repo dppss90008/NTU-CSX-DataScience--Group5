@@ -1,10 +1,5 @@
 library(stringr)
 library(jiebaR)
-
-
-
-
-
 pos<-read.csv('NTUSD_positive_UTF-8.csv',header=F,stringsAsFactors=FALSE,encoding = "unicode")
 weight <- rep(1, length(pos[,1])) #正面情感词语赋权重为1
 pos <- cbind(pos, weight)
