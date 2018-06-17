@@ -73,3 +73,6 @@ Ct_pos <- temp[temp$weight==1,3] %>% length()
 Ct_neg <- temp[temp$weight==-1,3] %>% length()
 
 Ct_pos/(Ct_pos+Ct_neg)
+
+
+
