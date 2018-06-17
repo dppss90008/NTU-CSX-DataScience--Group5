@@ -100,5 +100,5 @@ row.names(DF) <- DF$.rownames
 # Take a look at a subset of DF
 
 dtm
-Data <- DF[,1:10] %>% t
+Data <- DF[,1:10] %>% tX
 
