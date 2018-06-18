@@ -1,4 +1,3 @@
-
 library(jiebaR)
 library(jiebaRD)
 
@@ -25,7 +24,11 @@ new_user_word(w1,user)
 #### 文字清理 ####
 
 # 使用測試資料
-Data <- read.csv("Di_JanFebNews.csv")
+Data <- read.csv("FB_result/Ko_report.csv")
+# 清除去年資料、6月資料、照片
+Data <- Data[-c(139:200),]
+Data <- Data[-64,]
+Data <- Data[-c(1:12),]
 
 # 套件引用
 library(NLP)
@@ -34,7 +37,7 @@ library(tm)
 library(plyr)
 
 # 文字清理
-docs <- Corpus(VectorSource(Data$V3))
+docs <- Corpus(VectorSource(Data$post))
 toSpace <- content_transformer(function(x,pattern){
   return(gsub(pattern," ",x))
 })
@@ -58,7 +61,7 @@ jieba_tokenizer = function(d){
 seg = lapply(docs, jieba_tokenizer)
 
 # 計算情感分數
-sapply(seg,function(d){
+sentiment_point <- sapply(seg,function(d){
   res <- d
   temp<-data.frame()
   temp[c(1:length(res)),1]<-rep('1.text' ,length(res)) #id
@@ -71,34 +74,11 @@ sapply(seg,function(d){
   return(Ct_pos/(Ct_pos+Ct_neg))
 })
 
+# 將NA改成0.5
+sentiment_point[sentiment_point %>% is.na] = 0.5
+Data <- cbind(Data,sentiment_point)
 
-
-#### 文字頻率 ####
-library(tidyr)
-library(dplyr)
-library(NLP)
-library(tm)
-library(stats)
-library(proxy)
-library(readtext)
-library(jiebaRD)
-library(jiebaR)
-library(slam)
-library(Matrix)
-library(tidytext)
-
-freqFrame = as.data.frame(table(unlist(seg)))
-
-d.corpus <- Corpus(VectorSource(seg))
-
-tdm <- TermDocumentMatrix(d.corpus)
-tf <- as.matrix(tdm)
-DF <- tidy(tf)
-row.names(DF) <- DF$.rownames
-## 
-
-# Take a look at a subset of DF
-
-dtm
-Data <- DF[,1:10] %>% tX
-
+# 畫折線圖
+economics
+qplot(time%>% as.Date(),like, data = Data, geom = "line")
+Data$time %>% as.Date()
