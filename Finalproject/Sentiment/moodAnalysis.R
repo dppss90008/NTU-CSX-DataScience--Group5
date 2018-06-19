@@ -1,10 +1,15 @@
 library(stringr)
 library(jiebaR)
+<<<<<<< HEAD:Finalproject/moodAnalysis.R
+pos<-read.csv('NTUSD_positive_UTF-8.csv',header=F,stringsAsFactors=FALSE,encoding = "unicode")
+weight <- rep(1, length(pos[,1])) #正面情感词语赋权重为1
+=======
 library(jiebaRD)
 
 #### 使用情感字典 <NTUSD> ####
 pos<-read.csv('NTUSD_positive_unicode.csv',header=F,stringsAsFactors=FALSE,encoding = "unicode")
 weight <- rep(1, length(pos[,1])) #正面情感詞語權重為1
+>>>>>>> d5c79457dd098ee4a380af3bc21e5e581fa45e4d:Finalproject/Sentiment/moodAnalysis.R
 pos <- cbind(pos, weight)
 neg<-read.csv('NTUSD_negative_unicode.csv',header=F,stringsAsFactors=FALSE,encoding = "unicode")
 weight <- rep(-1, length(neg[,1])) #負面情感詞語權重為-1
