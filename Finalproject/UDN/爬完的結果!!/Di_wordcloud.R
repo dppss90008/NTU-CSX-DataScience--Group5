@@ -1,5 +1,5 @@
 # ===== 文字雲程式 : 聯合報文字雲
-# ===== 處理姚文智1月至5月的文章
+# ===== 處理 丁守中1月至5月的文章
 # ------------------------------------------
 # 
 # 匯入套件
@@ -15,48 +15,36 @@ library(magrittr)
 library(RColorBrewer)
 library(wordcloud)
 
+# ---- 資料清理 --------------------------------------------------------------
 # 匯入資料組
 setwd("/Users/Weber/Documents/GitHub/NTU-CSX-DataScience--Group5/Finalproject/UDN/爬完的結果!!")
-Yao_data <- read.csv("Yao_JanFebNews.csv")
-Yao_data2 <- read.csv("Yao_MarAprNews.csv")
-Yao_data3 <- read.csv("Yao_MayNews.csv")
+Di_data <- read.csv("Di_JanFebNews.csv", encoding = "big5")
+Di_data2 <- read.csv("Di_MarAprNews.csv", encoding = "big5")
+Di_data3 <- read.csv("Di_MayNews.csv", encoding = "big5")
 
 # bind all
-Yao_all <- rbind(Yao_data3[, 1:4], Yao_data2[,1:4], Yao_data[, 1:4])
+Di_all <- rbind(Di_data[,2:4], Di_data2[,2:4], Di_data3[,2:4])
 # 清除NA
-Yao_all <- Yao_all %>% na.omit()
+Di_all <- Di_all %>% na.omit()
 
 #切開時間
-Yao_all <- Yao_all %>% separate(V1, c("year","month","day"),"-")
-Yao_all <- Yao_all %>% separate(day, c("date","time"), " ")
-Yao_all <- Yao_all[with(Yao_all, order(year, month, date)), ]
-Yao_all <- Yao_all[!duplicated(Yao_all$V3), ]
-Yao_all <- Yao_all[Yao_all$year == "2018",]
-row.names(Yao_all) = c(1:650)
+Di_all <- Di_all %>% separate(V1, c("year","month","day"),"-")
+Di_all <- Di_all %>% separate(day, c("date","time"), " ")
+Di_all <- Di_all[with(Di_all, order(year ,month, date)), ]
+Di_all <- Di_all[!duplicated(Di_all$V3), ]
+Di_all<- Di_all[Di_all$year == "2018",]
+row.names(Di_all) = c(1:687) # 由資料數重新編排號碼
 
 # 依月份建立子資料組
-Yao1<- subset(Yao_all , Yao_all$month == "01", select = V3)
-Yao2<- subset(Yao_all , Yao_all$month == "02", select = V3)
-Yao3<- subset(Yao_all , Yao_all$month == "03", select = V3)
-Yao4<- subset(Yao_all , Yao_all$month == "04", select = V3)
-Yao5<- subset(Yao_all , Yao_all$month == "05", select = V3)
+Di1<- subset(Di_all , Di_all$month == "01", select = V3)
+Di2<- subset(Di_all , Di_all$month == "02", select = V3)
+Di3<- subset(Di_all , Di_all$month == "03", select = V3)
+Di4<- subset(Di_all , Di_all$month == "04", select = V3)
+Di5<- subset(Di_all , Di_all$month == "05", select = V3)
 
-# Di_text <- matrix(data = NA, nrow = 67,ncol = 5 )
-# Di_text <- cbind(data_1$bindtext, data_2$bindtext, data_3$bindtext, data_4$bindtext, data_5$bindtext)
-
-# ----------------------------------------------------------------------------------------------------------
-# 清理文本內容，刪除文本中不需要的雜訊
-# data_i$bindtext <- substr(data$bindtext, 69, (nchar(as.vector(data$bindtext))-183))
-# data$bindtext <- substr(data$bindtext, 69, (nchar(as.vector(data$bindtext))-183))
-# 切詞
-# data_1$bindtext[1:3] <- substr(data_1$bindtext[1:3], 69, (nchar(as.vector(data_1$bindtext[1:3]))-176))
-# ----------------------------------------------------------------------------------------------------------
-# 以上內容有待開發
-
-
-# ==== 姚文智
+# ==== 丁守中
 # ---- Jan
-docs <- Corpus(VectorSource(Yao1$V3))
+docs <- Corpus(VectorSource(Di1$V3))
 toSpace <- content_transformer(function(x,pattern){
   return(gsub(pattern," ",x))
 })
@@ -104,7 +92,7 @@ for(i in c(1:length(freqFrame$Var1))){
 freqFrame <- na.omit(freqFrame)
 # 畫出文字雲
 # 儲存文字雲圖片
-png("Yao_Jan.png", width = 300, height = 300 )
+png("Di_Jan.png", width = 300, height = 300)
 
 wordcloud(freqFrame$Var1,freqFrame$Freq,
           min.freq=50,
@@ -117,7 +105,7 @@ dev.off()
 
 
 # ---- Feb
-docs <- Corpus(VectorSource(Yao2$V3))
+docs <- Corpus(VectorSource(Di2$V3))
 toSpace <- content_transformer(function(x,pattern){
   return(gsub(pattern," ",x))
 })
@@ -164,7 +152,7 @@ for(i in c(1:length(freqFrame$Var1))){
 freqFrame <- na.omit(freqFrame)
 # 畫出文字雲
 # 儲存文字雲圖片
-png("Yao_Feb.png", width = 300, height = 300 )
+png("Di_Feb.png", width = 300, height = 300 )
 
 wordcloud(freqFrame$Var1,freqFrame$Freq,
           min.freq=50,
@@ -176,7 +164,7 @@ dev.off()
 
 
 # ---- Mar
-docs <- Corpus(VectorSource(Yao3$V3))
+docs <- Corpus(VectorSource(Di3$V3))
 toSpace <- content_transformer(function(x,pattern){
   return(gsub(pattern," ",x))
 })
@@ -223,7 +211,7 @@ for(i in c(1:length(freqFrame$Var1))){
 freqFrame <- na.omit(freqFrame)
 # 畫出文字雲
 # 儲存文字雲圖片
-png("Yao_Mar.png", width = 300, height = 300 )
+png("Di_Mar.png", width = 300, height = 300 )
 
 wordcloud(freqFrame$Var1,freqFrame$Freq,
           min.freq=50,
@@ -235,7 +223,7 @@ dev.off()
 
 
 # ---- Apr
-docs <- Corpus(VectorSource(Yao4$V3))
+docs <- Corpus(VectorSource(Di4$V3))
 toSpace <- content_transformer(function(x,pattern){
   return(gsub(pattern," ",x))
 })
@@ -282,7 +270,7 @@ for(i in c(1:length(freqFrame$Var1))){
 freqFrame <- na.omit(freqFrame)
 # 畫出文字雲
 # 儲存文字雲圖片
-png("Yao_Apr.png", width = 300, height = 300 )
+png("Di_Apr.png", width = 300, height = 300 )
 
 wordcloud(freqFrame$Var1,freqFrame$Freq,
           min.freq=50,
@@ -295,7 +283,7 @@ dev.off()
 
 
 # ---- May
-docs <- Corpus(VectorSource(Yao5$V3))
+docs <- Corpus(VectorSource(Di5$V3))
 toSpace <- content_transformer(function(x,pattern){
   return(gsub(pattern," ",x))
 })
@@ -342,10 +330,10 @@ for(i in c(1:length(freqFrame$Var1))){
 freqFrame <- na.omit(freqFrame)
 # 畫出文字雲
 # 儲存文字雲圖片
-png("Yao_May.png", width = 300, height =300 )
+png("Di_May.png", width = 400, height = 400 )
 
 wordcloud(freqFrame$Var1,freqFrame$Freq,
-          min.freq=150,
+          min.freq=200,
           random.order=TRUE,random.color=TRUE, 
           rot.per=.1, colors=rainbow(length(row.names(freqFrame))),
           ordered.colors=FALSE,use.r.layout=FALSE,
@@ -353,8 +341,9 @@ wordcloud(freqFrame$Var1,freqFrame$Freq,
 dev.off()
 
 
+
 # ---- 2018
-docs <- Corpus(VectorSource(Yao_all$V3))
+docs <- Corpus(VectorSource(Di_all$V3))
 toSpace <- content_transformer(function(x,pattern){
   return(gsub(pattern," ",x))
 })
@@ -401,7 +390,7 @@ for(i in c(1:length(freqFrame$Var1))){
 freqFrame <- na.omit(freqFrame)
 # 畫出文字雲
 # 儲存文字雲圖片
-png("Yao_2018.png", width = 400, height =400 )
+png("Di_2018.png", width = 400, height = 400 )
 
 wordcloud(freqFrame$Var1,freqFrame$Freq,
           min.freq=300,
@@ -411,13 +400,12 @@ wordcloud(freqFrame$Var1,freqFrame$Freq,
           fixed.asp=TRUE)
 dev.off()
 
-# -------------------------------------------
-  
+
 # 報導量
-Yao_textNum <- rbind(nrow(Yao1),nrow(Yao2),nrow(Yao3),nrow(Yao4),nrow(Yao5) )
-Yao_textNum %>% as.data.frame()
-colnames(Yao_textNum) <- "姚文智報導量"
-rownames(Yao_textNum) <- c("Jan","Feb","Mar","Apr","May")
-Yao_textNum
+Di_textNum <- rbind(nrow(Di1),nrow(Di2),nrow(Di3),nrow(Di4),nrow(Di5) )
+Di_textNum %>% as.data.frame()
+colnames(Di_textNum) <- "丁守中報導量"
+rownames(Di_textNum) <- c("Jan","Feb","Mar","Apr","May")
+Di_textNum
 # 輸出
-write.table(Yao_textNum, file = "Yao_textNum.CSV", sep = ",")
+write.table(Di_textNum, file = "Di_textNum.CSV", sep = ",")
