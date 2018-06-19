@@ -15,7 +15,7 @@ shinyUI(navbarPage(
                            choices = list("柯文哲"="柯文哲", "丁守中"="丁守中", "姚文智"="姚文智","全部"=4))
                ,checkboxInput("line", label = "加上趨勢線", value = FALSE),
                radioButtons("mood", label = h3("Radio buttons"),
-                            choices = list("like" = "like", "share" = "share", "angry" = "angry"), 
+                            choices = c("like","share","angry","sad","haha","love","wow"), 
                             selected = "like")
                
              ), mainPanel(
@@ -30,7 +30,22 @@ shinyUI(navbarPage(
   
   #### 盒狀圖布局 ####
   tabPanel("盒狀圖",
-           h1("Hi, this is an example page")
+         
+           sidebarLayout(
+             
+             sidebarPanel(
+              radioButtons("mood2", label = h3("Radio buttons"),
+                            choices = c("like","share","angry","sad","haha","love","wow"), 
+                            selected = "like"),
+              checkboxInput("outlier", label = "去除極端值", value = FALSE)
+               
+              ), mainPanel(
+               
+              plotOutput("BoxPlot")
+               
+             )
+           )
+           
   ),
   
   #### Top ####
