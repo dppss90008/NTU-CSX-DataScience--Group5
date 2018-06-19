@@ -85,36 +85,35 @@ name <- rep("Di", length(Data[,1]))
 Data <- cbind(name,Data)
 
 
-write.csv(Data,"Di_result_sentiment.csv")
 
-Di_data <- read.csv("Di_result_sentiment.csv")
-Di_data <- Di_data[-c(267:300),]
-write.csv(Di_data,file="Di_result_sentiment2.csv")
-Ko_data <- read.csv("Ko_result_sentiment.csv")
-Ko_data <- Ko_data[-c(138:200),]
-write.csv(Ko_data,file="Ko_result_sentiment2.csv")
-Yao_data <- read.csv("Yao_result_sentiment.csv")
-Yao_data <- Yao_data[-c(247:290),]
-write.csv(Yao_data,file="Yao_result_sentiment2.csv")
 
-FacebookAPI_res <- rbind(Ko_data,Yao_data,Di_data)
-FacebookAPI_res$name <- FacebookAPI_res$name %>% as.factor()
-FacebookAPI_res$time <- FacebookAPI_res$time %>% as.Date()
-write.csv(FacebookAPI_res,"FacebookAPI_res.csv")
+FB <- read.csv("FB_final.csv")
 
+FB <- FB[,-c(1,2,3,5)]
 # 畫折線圖
 library(ggplot2)
+colnames(FB)[11] = "sentiment"
+write.csv(FB,"FaceBookAPI-Taipei.csv")
+colnames(FB)
+ggplot(data=FB, aes(x=time%>% as.Date(), y=like, color=Candidate))+geom_point(size=1)+xlab("time")+scale_color_manual(values=c("blue", "green", "black"))
 
-# 三人分別likes累計圖
-Yao_like_time <- qplot(time%>% as.Date(),like, data = Yao_data,geom = c("point", "smooth"),xlab = "time",main = "姚文智 Facebook likes 累計圖 (一月到六月)")
+
+
+
+
+
+
+
+
+Yao_like_time <- qplot(time%>% as.Date(),like, data = FB[FB$name=="Ko",],geom = c("point", "smooth"),xlab = "time",main = "姚文智 Facebook likes 累計圖 (一月到六月)")
 Ko_like_time <- qplot(time%>% as.Date(),like, data = Ko_data,geom = c("point", "smooth"),xlab = "time",main = "柯文哲 Facebook likes 累計圖 (一月到六月)")
 Di_like_time <- qplot(time%>% as.Date(),like, data = Di_data,geom = c("point", "smooth"),xlab = "time",main = "丁守中 Facebook likes 累計圖 (一月到六月)")
-
+  
 # box plot like 三人比較
-box_like <- qplot(name,like, data = FacebookAPI_res, geom = c("boxplot"),main="台北市候選人likes數box plot")
+qplot(name,like, data = FB, geom = c("boxplot"),main="台北市候選人likes數box plot",ylim(0:1e+05))
 
 # box plot sentiment 文章風格
-qplot(name,sentiment_point, data = FacebookAPI_res, geom = c("boxplot"))
+qplot(name,sentiment_point, data = FB, geom = c("boxplot"),margins)
 
 # 三人分別angry 累計圖
 Yao_angry_time <- qplot(time%>% as.Date(),angry, data = Yao_data,geom = c("point", "smooth"),xlab = "time",main = "姚文智 Facebook angry 累計圖 (一月到六月)")
@@ -133,3 +132,16 @@ Di_share_time <- qplot(time%>% as.Date(),share, data = Di_data,geom = c("point",
 
 # box plot like 三人比較
 box_share <- qplot(name,share, data = FacebookAPI_res, geom = c("boxplot"),main="台北市候選人share數box plot")
+
+Ko <- FB[FB$name=="Ko",]
+Yao <- FB[FB$name=="Yao",]
+Di <- FB[FB$name=="Di",]
+name2 <- rep("柯文哲",137)
+Ko <- cbind(Ko,name2)
+FB <- rbind(Ko,Yao,Di)
+write.csv(FB,file="FB_final.csv")
+
+p <- ggplot(FB, aes(x=name2, y=share,color = name2)) + 
+  geom_boxplot(outlier.shape = NA)+ylim(low=0, high=1000)+scale_color_manual(values=c("gray", "green", "blue"))
+p
+
