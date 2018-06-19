@@ -28,11 +28,12 @@ data_3 <- read.csv("Di_MarLtnNews", encoding = "big5")
 data_4 <- read.csv("Di_AprLtnNews", encoding = "big5")
 data_5 <- read.csv("Di_MayLtnNews", encoding = "big5")
 # 清除格式有誤的資料
-data_1<- data_1[-4,]
-data_2<- data_2[-8,]
-data_3<- data_3[-34,]
-data_5<- data_5[-1,]
-data_5<- data_5[-57,]
+# data_1<- data_1[-4,]
+# data_2<- data_2[-8,]
+# data_3<- data_3[-34,]
+# data_5<- data_5[-1,]
+# data_5<- data_5[-57,]
+
 # 重遺漏資訊
 data_1 <- data_1 %>% na.omit()
 data_2 <- data_2 %>% na.omit()
@@ -432,12 +433,21 @@ freqFrame <- na.omit(freqFrame)
 png("Di_2018.png", width = 300, height = 300)
 
 wordcloud(freqFrame$Var1,freqFrame$Freq,
-          min.freq=400,
+          min.freq=200,
           random.order=TRUE,random.color=TRUE, 
           rot.per=.1, colors=rainbow(length(row.names(freqFrame))),
           ordered.colors=FALSE,use.r.layout=FALSE,
           fixed.asp=TRUE)
 
 dev.off()
+
+# ==== 報導量
+Di_textNum <- rbind(nrow(data_1),nrow(data_2),nrow(data_3),nrow(data_4),nrow(data_5) )
+Di_textNum %>% as.data.frame()
+colnames(Di_textNum) <- "丁守中報導量"
+rownames(Di_textNum) <- c("Jan","Feb","Mar","Apr","May")
+Di_textNum
+# 輸出
+write.table(Di_textNum, file = "Di_textNum.CSV", sep = ",")
 
 

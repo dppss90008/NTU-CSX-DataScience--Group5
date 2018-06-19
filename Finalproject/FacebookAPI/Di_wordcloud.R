@@ -3,7 +3,10 @@
 # ------------------------------------------
 # 
 # 匯入套件
+library(tibble)
 library(dplyr)
+library(tidyr)
+library(data.table)
 library(NLP)
 library(tm)
 library(jiebaRD)
@@ -14,7 +17,7 @@ library(wordcloud)
 
 # 匯入資料組
 setwd("/Users/Weber/Documents/GitHub/NTU-CSX-DataScience--Group5/Finalproject/FacebookAPI")
-Di_data <- read.csv("Di_report.csv")
+data <- read.csv("Di_report.csv")
 # Ko_data <- read.csv("Ko_report.csv")
 # Yao_data <- read.csv("Yao_report.csv")
 
