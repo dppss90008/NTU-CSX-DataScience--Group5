@@ -37,6 +37,9 @@ Y3<- subset(data , data$month == "03", select = post)
 Y4<- subset(data , data$month == "04", select = post)
 Y5<- subset(data , data$month == "05", select = post)
 Y6<- subset(data , data$month == "06", select = post)
+
+# debug
+# Y1 <- Y1[-23,]
 # Di_text <- matrix(data = NA, nrow = 67,ncol = 5 )
 # Di_text <- cbind(data_1$bindtext, data_2$bindtext, data_3$bindtext, data_4$bindtext, data_5$bindtext)
 
@@ -60,7 +63,7 @@ toSpace <- content_transformer(function(x,pattern){
 docs <- tm_map(docs,toSpace,"\n")
 docs <- tm_map(docs,toSpace, "[A-Za-z0-9]")
 clean_doc <- function(docs){
-  clean_words <- c("[A-Za-z0-9]","、","《","『","』","【","】","／","＼","：","，","。","！","「","（","」","）","\n","；",">","<","＜","＞")
+  clean_words <- c("[A-Za-z0-9]","、","《","》","♀","♂","『","』","【","】","／","＼","：","，","。","！","「","（","」","）","\n","；",">","<","＜","＞")
   for(i in 1:length(clean_words)){
     docs <- tm_map(docs,toSpace, clean_words[i])
   }
@@ -103,7 +106,7 @@ freqFrame <- na.omit(freqFrame)
 png("Yao_Jan.png", width = 300, height = 300 )
 
 wordcloud(freqFrame$Var1,freqFrame$Freq,
-          min.freq=20,
+          min.freq=5,
           random.order=TRUE,random.color=TRUE, 
           rot.per=.1, colors=rainbow(length(row.names(freqFrame))),
           ordered.colors=FALSE,use.r.layout=FALSE,
@@ -163,7 +166,7 @@ freqFrame <- na.omit(freqFrame)
 png("Yao_Feb.png", width = 300, height = 300 )
 
 wordcloud(freqFrame$Var1,freqFrame$Freq,
-          min.freq=20,
+          min.freq=15,
           random.order=TRUE,random.color=TRUE, 
           rot.per=.1, colors=rainbow(length(row.names(freqFrame))),
           ordered.colors=FALSE,use.r.layout=FALSE,
@@ -222,7 +225,7 @@ freqFrame <- na.omit(freqFrame)
 png("Yao_Mar.png", width = 300, height = 300 )
 
 wordcloud(freqFrame$Var1,freqFrame$Freq,
-          min.freq=20,
+          min.freq=13,
           random.order=TRUE,random.color=TRUE, 
           rot.per=.1, colors=rainbow(length(row.names(freqFrame))),
           ordered.colors=FALSE,use.r.layout=FALSE,
@@ -281,7 +284,7 @@ freqFrame <- na.omit(freqFrame)
 png("Yao_Apr.png", width = 300, height = 300 )
 
 wordcloud(freqFrame$Var1,freqFrame$Freq,
-          min.freq=20,
+          min.freq=12,
           random.order=TRUE,random.color=TRUE, 
           rot.per=.1, colors=rainbow(length(row.names(freqFrame))),
           ordered.colors=FALSE,use.r.layout=FALSE,
@@ -341,7 +344,7 @@ freqFrame <- na.omit(freqFrame)
 png("Yao_May.png", width = 300, height = 300 )
 
 wordcloud(freqFrame$Var1,freqFrame$Freq,
-          min.freq=50,
+          min.freq=12,
           random.order=TRUE,random.color=TRUE, 
           rot.per=.1, colors=rainbow(length(row.names(freqFrame))),
           ordered.colors=FALSE,use.r.layout=FALSE,
@@ -397,10 +400,10 @@ for(i in c(1:length(freqFrame$Var1))){
 freqFrame <- na.omit(freqFrame)
 # 畫出文字雲
 # 儲存文字雲圖片
-png("Di_Jun.png", width = 300, height = 300 )
+png("Yao_Jun.png", width = 300, height = 300 )
 
 wordcloud(freqFrame$Var1,freqFrame$Freq,
-          min.freq=100,
+          min.freq=5,
           random.order=TRUE,random.color=TRUE, 
           rot.per=.1, colors=rainbow(length(row.names(freqFrame))),
           ordered.colors=FALSE,use.r.layout=FALSE,
