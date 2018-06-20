@@ -159,4 +159,45 @@ shinyServer(function(input, output) {
     
   })
   
+  output$newsLDA <- renderPlot({
+    if(input$newsLDA=="LTN"){
+      if(input$nameLDA=="柯文哲"){
+        
+      }else if(input$nameLDA=="丁守中"){
+        
+      }else if(input$nameLDA=="姚文智"){
+        
+      }
+      
+    }else if(input$newsLDA=="UDN"){
+      if(input$nameLDA=="柯文哲"){
+        P <- load.image("NewsLDA/UDN/Ko.png")
+        plot(P,axes = FALSE)
+      }else if(input$nameLDA=="丁守中"){
+        P <- load.image("NewsLDA/UDN/Di.png")
+        plot(P,axes = FALSE)
+      }else if(input$nameLDA=="姚文智"){
+        P <- load.image("NewsLDA/UDN/Yao.png")
+        plot(P,axes = FALSE)
+      }
+    }else if(input$newsLDA=="Apple"){
+      if(input$nameLDA=="柯文哲"){
+        
+      }else if(input$nameLDA=="丁守中"){
+        
+      }else if(input$nameLDA=="姚文智"){
+        
+      }
+    }else if(input$newsLDA=="CT"){
+      if(input$nameLDA=="柯文哲"){
+        
+      }else if(input$nameLDA=="丁守中"){
+        
+      }else if(input$nameLDA=="姚文智"){
+        
+      }
+    }
+    
+  })
+  
 })

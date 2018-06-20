@@ -135,12 +135,12 @@ shinyUI(navbarPage("選戰懶人包",
                                             selectInput("newsLDA", "Choose a dataset:",
                                               choices = c("UDN", "CT", "LTN","Apple")),
                                             selectInput("nameLDA", "Choose a dataset:",
-                                              choices = c("柯文哲", "丁守中", "姚文智","Apple"))
+                                              choices = c("柯文哲", "丁守中", "姚文智"))
                                   
                                         ),mainPanel(
                                   
                                               h4("Observations"),
-                                              plotOutput("TestPlot")
+                                              plotOutput("newsLDA",height = 600, width = 1200)
                                   
                                 )
                               ))),
