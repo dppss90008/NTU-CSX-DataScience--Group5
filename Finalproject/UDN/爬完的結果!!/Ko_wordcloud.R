@@ -22,7 +22,7 @@ Ko_data <- read.csv("ko_Output.csv", encoding = "big5")
 Ko_data2 <- read.csv("ko_Output2.csv", encoding = "big5")
 
 # bind all
-ko_all <- rbind(Ko_data[,4:5], Ko_data2[,3:4])
+ko_all <- rbind(Ko_data[,3:5], Ko_data2[,2:4])
 # 清除NA
 ko_all <- ko_all %>% na.omit()
 
@@ -30,8 +30,17 @@ ko_all <- ko_all %>% na.omit()
 ko_all <- ko_all %>% separate(V2, c("year","month","day"),"-")
 ko_all <- ko_all %>% separate(day, c("date","time"), " ")
 ko_all <- ko_all[with(ko_all, order(year, month, date)), ]
-row.names(ko_all) = c(1:3114) # 由資料數重新編排號碼
 ko_all <- ko_all[!duplicated(ko_all$bindtext), ]
+row.names(ko_all) = c(1:3112) # 由資料數重新編排號碼
+Ko <- subset(ko_all, select = c(month, date, V1, bindtext))
+Media <- c()
+text <- c("UDN")
+for( i in 1:length(Ko$bindtext)){
+  Media <- rbind(Media, text)
+}
+Ko <- cbind(Media, Ko)
+write.table(Ko , file = "C:/Users/Weber/Documents/GitHub/NTU-CSX-DataScience--Group5/Finalproject/NewsCleaning/Ko_udn.csv", sep = ",")
+
 
 ko1<- subset(ko_all, ko_all$month == "01", select = bindtext)
 ko2<- subset(ko_all, ko_all$month == "02", select = bindtext)

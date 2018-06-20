@@ -34,6 +34,15 @@ Yao_all <- Yao_all[!duplicated(Yao_all$V3), ]
 Yao_all <- Yao_all[Yao_all$year == "2018",]
 row.names(Yao_all) = c(1:650)
 
+Yao <- subset(Yao_all, select = c(month, date, V2, V3))
+Media <- c()
+text <- c("UDN")
+for( i in 1:length(Yao$V3)){
+  Media <- rbind(Media, text)
+}
+Yao <- cbind(Media, Yao)
+write.table(Yao, file = "C:/Users/Weber/Documents/GitHub/NTU-CSX-DataScience--Group5/Finalproject/NewsCleaning/Yao_udn.csv", sep = ",")
+
 # 依月份建立子資料組
 Yao1<- subset(Yao_all , Yao_all$month == "01", select = V3)
 Yao2<- subset(Yao_all , Yao_all$month == "02", select = V3)

@@ -27,6 +27,7 @@ data_2 <- read.csv("Yao_FebLtnNews", encoding = "big5")
 data_3 <- read.csv("Yao_MarLtnNews", encoding = "big5")
 data_4 <- read.csv("Yao_AprLtnNews", encoding = "big5")
 data_5 <- read.csv("Yao_MayLtnNews", encoding = "big5")
+
 # 清除格式有誤的資料
 # 重遺漏資訊
 data_1 <- data_1 %>% na.omit()
@@ -40,6 +41,16 @@ data_2 <- data_2[!duplicated(data_2$bindtext), ]
 data_3 <- data_3[!duplicated(data_3$bindtext), ]
 data_4 <- data_4[!duplicated(data_4$bindtext), ]
 data_5 <- data_5[!duplicated(data_5$bindtext), ]
+# bind
+Yao_all <- rbind(data_1, data_2, data_3, data_4, data_5)
+Yao <- subset(Yao_all, select = c(V1, bindtext))
+Media <- c()
+text <- c("LTN")
+for( i in 1:length(Yao$bindtext)){
+  Media <- rbind(Media, text)
+}
+Yao <- cbind(Media, Yao)
+write.table(Yao, file = "C:/Users/Weber/Documents/GitHub/NTU-CSX-DataScience--Group5/Finalproject/NewsCleaning/Yao_ltn.csv", sep = ",")
 
 # Di_text <- matrix(data = NA, nrow = 67,ncol = 5 )
 # Di_text <- cbind(data_1$bindtext, data_2$bindtext, data_3$bindtext, data_4$bindtext, data_5$bindtext)
@@ -371,8 +382,6 @@ wordcloud(freqFrame$Var1,freqFrame$Freq,
 dev.off()
 
 #====== 2018
-# bind
-Yao_all <- rbind(data_1, data_2, data_3, data_4, data_5)
 docs <- Corpus(VectorSource(Yao_all$bindtext))
 toSpace <- content_transformer(function(x,pattern){
   return(gsub(pattern," ",x))
