@@ -162,11 +162,14 @@ shinyServer(function(input, output) {
   output$newsLDA <- renderPlot({
     if(input$newsLDA=="LTN"){
       if(input$nameLDA=="柯文哲"){
-        
+        P <- load.image("NewsLDA/LTN/Ko.png")
+        plot(P,axes = FALSE)
       }else if(input$nameLDA=="丁守中"){
-        
+        P <- load.image("NewsLDA/LTN/Di.png")
+        plot(P,axes = FALSE)
       }else if(input$nameLDA=="姚文智"){
-        
+        P <- load.image("NewsLDA/LTN/Yao.png")
+        plot(P,axes = FALSE)
       }
       
     }else if(input$newsLDA=="UDN"){
