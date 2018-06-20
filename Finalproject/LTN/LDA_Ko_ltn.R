@@ -45,9 +45,9 @@ new_user_word(cutter, c("柯文哲","陳景峻","賴清德","丁守中","轉型�
 ko_all$words <- sapply(ko_all$bindtext %>% as.character() , function(x){tryCatch({cutter[x]}, error=function(err){})})
 
 #讀取stop words檔
-fin <- file("../爬完的結果!!/stopwords_tw.txt", open = "r")
+fin <- file("../stopwords_tw.txt", open = "r")
 stopwords <- readLines(fin , encoding = "UTF8")
-stopwords <- c(stopwords,"表示", "報導")#stopwords 加上表示、報導
+stopwords <- c(stopwords,"新聞","以上","根本","沒有","記者","表示","報導","the","to","and","Taipei","in","of","said","that","he","Ko","[Az]")#stopwords 加上表示、報導
 stopwords <- unique(stopwords) #刪去重複的stopwords
 
 library(tidyr) # for unnest() 展開每一個被切開的詞

@@ -37,6 +37,18 @@ data_2 <- data_2[!duplicated(data_2$bindtext), ]
 data_3 <- data_3[!duplicated(data_3$bindtext), ]
 data_4 <- data_4[!duplicated(data_4$bindtext), ]
 data_5 <- data_5[!duplicated(data_5$bindtext), ]
+
+# bind
+Ko_all <- rbind(data_1, data_2, data_3, data_4, data_5)
+Ko <- subset(Ko_all, select = c(V1, bindtext))
+Media <- c()
+text <- c("LTN")
+for( i in 1:length(Ko$bindtext)){
+  Media <- rbind(Media, text)
+}
+Ko <- cbind(Media, Ko)
+write.table(Ko, file = "C:/Users/Weber/Documents/GitHub/NTU-CSX-DataScience--Group5/Finalproject/NewsCleaning/Ko_ltn.csv", sep = ",")
+
 # Di_text <- matrix(data = NA, nrow = 67,ncol = 5 )
 # Di_text <- cbind(data_1$bindtext, data_2$bindtext, data_3$bindtext, data_4$bindtext, data_5$bindtext)
 
@@ -366,8 +378,6 @@ wordcloud(freqFrame$Var1,freqFrame$Freq,
 dev.off()
 
 #====== 2018
-# bind
-Ko_all <- rbind(data_1, data_2, data_3, data_4, data_5)
 docs <- Corpus(VectorSource(Ko_all$bindtext))
 toSpace <- content_transformer(function(x,pattern){
   return(gsub(pattern," ",x))
