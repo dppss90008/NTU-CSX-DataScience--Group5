@@ -6,11 +6,11 @@ library(magrittr)
 shinyServer(function(input, output) {
   
   FB_Taipei <- read.csv("FaceBookAPI-Taipei.csv")
-  
+ 
   output$TrendPlot <- renderPlot({
     if(input$Candi==4){
       mood = input$mood %>% as.character()
-      ggplot(data=FB_Taipei, aes(x=time%>% as.Date(), y=eval(parse(text = input$mood %>% as.character())), color=Candidate))+geom_point(size=3)+xlab("time")+scale_color_manual(values=c("blue", "green", "black"))
+      ggplot(data=FB_Taipei, aes(x=time%>% as.Date(), y=eval(parse(text = input$mood %>% as.character())), color=Candidate))+geom_point(size=3)+xlab("time")+ylab(mood)+scale_color_manual(values=c("blue", "green", "black"))
     }else{
       names = input$Candi %>% as.character()
       mood = input$mood %>% as.character()
@@ -53,6 +53,9 @@ shinyServer(function(input, output) {
       }else if (input$mood2=="wow"){
         Q = FB_Taipei$wow %>%  quantile(.,0.75)
         Q = Q*2
+      }else if (input$mood2=="sentiment"){
+        Q = FB_Taipei$sentiment %>%  quantile(.,0.75)
+        Q = 1
       }
       
       
@@ -66,6 +69,54 @@ shinyServer(function(input, output) {
   output$TestPlot <- renderPlot({
     qplot(name,share,data=FB_Taipei)
   })
+  
+  output$TopText <- renderTable({
+    
+    if(input$Candi2=="柯文哲"){
+      df = FB_Taipei[FB_Taipei$name=="Ko",]
+    }else if(input$Candi2=="丁守中"){
+      df = FB_Taipei[FB_Taipei$name=="Di",]
+    }else if(input$Candi2=="姚文智"){
+      df = FB_Taipei[FB_Taipei$name=="Yao",]
+    }
+    if(input$mood3=="like"){
+      df2 <- df[,c(3,4,6)]
+      df2[df2$like %>% order(.,decreasing = input$decrease), ] %>% head(.,n = input$shows)
+      
+    }else if (input$mood3=="share"){
+      df2 <- df[,c(3,4,5)]
+      df2[df2$share %>% order(.,decreasing = input$decrease), ] %>% head(.,n = input$shows)
+      
+    }else if (input$mood3=="angry"){
+      df2 <- df[,c(3,4,11)]
+      df2[df2$angry %>% order(.,decreasing = input$decrease), ] %>% head(.,n = input$shows)
+      
+    }else if (input$mood3=="sad"){
+      df2 <- df[,c(3,4,9)]
+      df2[df2$sad %>% order(.,decreasing = input$decrease), ] %>% head(.,n = input$shows)
+      
+    }else if (input$mood3=="haha"){
+      df2 <- df[,c(3,4,8)]
+      df2[df2$haha %>% order(.,decreasing = input$decrease), ] %>% head(.,n = input$shows)
+      
+    }else if (input$mood3=="love"){
+      df2 <- df[,c(3,4,7)]
+      df2[df2$love %>% order(.,decreasing = input$decrease), ] %>% head(.,n = input$shows)
+      
+    }else if (input$mood3=="wow"){
+      df2 <- df[,c(3,4,10)]
+      df2[df2$wow %>% order(.,decreasing = input$decrease), ] %>% head(.,n = input$shows)
+      
+    }else if (input$mood3=="sentiment"){
+      df2 <- df[,c(3,4,12)]
+      df2[df2$sentiment %>% order(.,decreasing = input$decrease), ] %>% head(.,n = input$shows)
+      
+    }
+
+    
+ 
+  })
+  
   
   
 })
