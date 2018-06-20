@@ -17,7 +17,7 @@ library(wordcloud)
 
 # 匯入資料組
 setwd("/Users/Weber/Documents/GitHub/NTU-CSX-DataScience--Group5/Finalproject/FacebookAPI")
-data <- read.csv("Yao_report.csv", encoding = "UTF-8")
+data <- read.csv("Yao_report.csv", encoding = "big5")
 # 清除NA
 data <- data %>% na.omit()
 # 切開時間
@@ -37,6 +37,8 @@ Y3<- subset(data , data$month == "03", select = post)
 Y4<- subset(data , data$month == "04", select = post)
 Y5<- subset(data , data$month == "05", select = post)
 Y6<- subset(data , data$month == "06", select = post)
+
+cheat <- rbind(Y2,Y3,Y4,Y5)
 
 # debug
 # Y1 <- Y1[-23,]
@@ -411,7 +413,7 @@ wordcloud(freqFrame$Var1,freqFrame$Freq,
 dev.off()
 
 # ---- 2018
-docs <- Corpus(VectorSource(data$post))
+docs <- Corpus(VectorSource(cheat$post))
 toSpace <- content_transformer(function(x,pattern){
   return(gsub(pattern," ",x))
 })
@@ -458,10 +460,10 @@ for(i in c(1:length(freqFrame$Var1))){
 freqFrame <- na.omit(freqFrame)
 # 畫出文字雲
 # 儲存文字雲圖片
-png("Di_2018.png", width = 400, height = 400 )
+png("Yao_2018.png", width = 400, height = 400 )
 
 wordcloud(freqFrame$Var1,freqFrame$Freq,
-          min.freq=300,
+          min.freq=30,
           random.order=TRUE,random.color=TRUE, 
           rot.per=.1, colors=rainbow(length(row.names(freqFrame))),
           ordered.colors=FALSE,use.r.layout=FALSE,

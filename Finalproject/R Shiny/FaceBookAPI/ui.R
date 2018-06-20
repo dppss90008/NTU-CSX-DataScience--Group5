@@ -50,7 +50,6 @@ shinyUI(navbarPage(
   tabPanel("Top文本",
            sidebarLayout(
              sidebarPanel(
-               
                selectInput("Candi2", "Choose a dataset:",
                            choices = c("柯文哲", "丁守中", "姚文智"))
                ,numericInput('shows', '顯示項目', 5,
@@ -74,22 +73,60 @@ shinyUI(navbarPage(
   ),
   
   #### 文字雲 ####
-  tabPanel("文字雲",
+  tabPanel("四大報文字雲",
            sidebarLayout(
              sidebarPanel(
-               selectInput("CandiXD", "Choose a dataset:",
-                           choices = c("柯文哲", "丁守中", "姚文智")),
-               radioButtons("radio", label = h3("Radio buttons"),
-                            choices = list("Choice 1" = 1, "Choice 2" = 2, "Choice 3" = 3), 
-                            selected = 1)
+               selectInput("CandiXD", "北市候選人 :",
+                           choices = list("柯文哲" = 1, "丁守中" = 2, "姚文智" = 3),
+                           selected = 1),
+               radioButtons("news", label = h3("媒體與社群"),
+                           choices = list("自由" = 1, "聯合" = 2, "中時" = 3, "蘋果" = 4),
+                           selected = 1),
+               radioButtons("month", label = h3("月份"),
+                           choices = list("2018" = 0, "Jan" = 1, "Feb" = 2, "Mar" = 3, "Apr" = 4, "May" = 5), 
+                           selected = 0)
                
                
-             ),mainPanel(
+             ),
+             mainPanel(
                
-               h4("Observations"),
-               plotOutput("CloudPlot")
+               h3("候選人文字雲"),
+               plotOutput("CloudPlot", height = 700, width = 700)
                
              )
+             
+    
+    
+    
+    
+    
+  )
+           
+  ),
+  
+  #### 文字雲 ####
+  tabPanel("臉書文字雲",
+           sidebarLayout(
+             sidebarPanel(
+               selectInput("candiXD", "北市候選人 :",
+                           choices = list("柯文哲" = 1, "丁守中" = 2, "姚文智" = 3),
+                           selected = 1),
+               radioButtons("yue", label = h3("月份"),
+                            choices = list("2018" = 0, "Jan" = 1, "Feb" = 2, "Mar" = 3, "Apr" = 4, "May" = 5, "Jun" = 6), 
+                            selected = 0)
+               
+               
+             ),
+             mainPanel(
+               
+               h3("候選人粉專文字雲"),
+               plotOutput("FaceCloudPlot", height = 600, width = 600)
+               
+             )
+             
+             
+             
+             
              
              
            )
@@ -100,6 +137,7 @@ shinyUI(navbarPage(
   tabPanel("LDA",
            h1("施工中!!")
   )
+  
   
   
   
