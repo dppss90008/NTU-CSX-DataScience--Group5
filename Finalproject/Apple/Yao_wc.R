@@ -331,7 +331,7 @@ freqFrame <- na.omit(freqFrame)
 png("Yao_May.png", width = 300, height = 300 )
 
 wordcloud(freqFrame$Var1,freqFrame$Freq,
-          min.freq=170,
+          min.freq=160,
           random.order=TRUE,random.color=TRUE, 
           rot.per=.1, colors=rainbow(length(row.names(freqFrame))),
           ordered.colors=FALSE,use.r.layout=FALSE,
