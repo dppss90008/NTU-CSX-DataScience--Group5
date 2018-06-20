@@ -1,4 +1,5 @@
 
+library(imager)
 library(shiny)
 library(ggplot2)
 library(magrittr)
@@ -114,14 +115,32 @@ shinyServer(function(input, output) {
     
     
   })
-  
+  output$postLDA <- renderPlot({
+
+    if(input$PostCandi=="柯文哲"){
+      P <- load.image("PostLDA/Ko.png")
+      plot(P,axes = FALSE)
+      
+    }else if(input$PostCandi=="姚文智"){
+      P <- load.image("PostLDA/Yao.png")
+      plot(P,axes = FALSE)
+    }else if(input$PostCandi=="丁守中"){
+      P <- load.image("PostLDA/Di.png")
+      plot(P,axes = FALSE)
+    }
+
+  })
   
   output$TestPlot <- renderPlot({
     
     qplot(name,sentiment,data=News)
     
   })
-  
+  output$TestPlot2 <- renderPlot({
+    
+    qplot(name,sentiment,data=News)
+    
+  })
   output$NewsMood <- renderPlot({
     
     candi <- input$newsCandi %>% as.character()

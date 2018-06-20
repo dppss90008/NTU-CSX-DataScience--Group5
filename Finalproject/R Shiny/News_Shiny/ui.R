@@ -71,7 +71,24 @@ shinyUI(navbarPage("選戰懶人包",
                                          
                                        )),
                               tabPanel("文字雲"),
-                              tabPanel("LDA")
+                              tabPanel("LDA",sidebarLayout(
+                                sidebarPanel(
+                                  selectInput("PostCandi", "Choose a dataset:",
+                                              choices = c("柯文哲", "丁守中", "姚文智"))
+                                  
+                                ),mainPanel(
+                                  
+                                  h4("Observations"),
+                                  plotOutput("postLDA",height = 600, width = 1200)
+                                  
+                                )
+                              )
+                                       
+                                       
+                                       
+                                       
+                                       
+                                       )
                               ),
     
                   navbarMenu("四大報",
@@ -111,7 +128,22 @@ shinyUI(navbarPage("選戰懶人包",
                                       
                              ),
                               tabPanel("文字雲"),
-                              tabPanel("LDA")),
+                              tabPanel("LDA" ,
+                                       
+                                       sidebarLayout(
+                                          sidebarPanel(
+                                            selectInput("newsLDA", "Choose a dataset:",
+                                              choices = c("UDN", "CT", "LTN","Apple")),
+                                            selectInput("nameLDA", "Choose a dataset:",
+                                              choices = c("柯文哲", "丁守中", "姚文智","Apple"))
+                                  
+                                        ),mainPanel(
+                                  
+                                              h4("Observations"),
+                                              plotOutput("TestPlot")
+                                  
+                                )
+                              ))),
                   
                   tabPanel("討論")
 
