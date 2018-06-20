@@ -48,29 +48,7 @@ shinyUI(navbarPage(
 
   #### Top ####
   tabPanel("Top文本",
-           sidebarLayout(
-             sidebarPanel(
-               
-               selectInput("Candi", "Choose a dataset:",
-                           choices = list("柯文哲"="柯文哲", "丁守中"="丁守中", "姚文智"="姚文智","全部"=4))
-               ,checkboxInput("line", label = "加上趨勢線", value = FALSE),
-               radioButtons("mood", label = h3("Radio buttons"),
-                            choices = c("like","share","angry","sad","haha","love","wow"), 
-                            selected = "like")
-               
-               
-               
-               
-             ),mainPanel(
-               
-               plotOutput("TestPlot")
-               
-             )
-             
-             
-             
-             
-           )
+           h1("Hi, this is an example page")
   ),
   
   #### 文字雲 ####
