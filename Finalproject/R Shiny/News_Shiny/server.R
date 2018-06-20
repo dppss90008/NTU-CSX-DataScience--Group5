@@ -182,19 +182,25 @@ shinyServer(function(input, output) {
       }
     }else if(input$newsLDA=="Apple"){
       if(input$nameLDA=="柯文哲"){
-        
+        P <- load.image("NewsLDA/Apple/App_Ko.png")
+        plot(P,axes = FALSE)
       }else if(input$nameLDA=="丁守中"){
-        
+        P <- load.image("NewsLDA/Apple/App_Ding.png")
+        plot(P,axes = FALSE)
       }else if(input$nameLDA=="姚文智"){
-        
+        P <- load.image("NewsLDA/Apple/App_Yao.png")
+        plot(P,axes = FALSE)
       }
     }else if(input$newsLDA=="CT"){
       if(input$nameLDA=="柯文哲"){
-        
+        P <- load.image("NewsLDA/CT/CT_Ko.png")
+        plot(P,axes = FALSE)
       }else if(input$nameLDA=="丁守中"){
-        
+        P <- load.image("NewsLDA/CT/CT_Ding.png")
+        plot(P,axes = FALSE)
       }else if(input$nameLDA=="姚文智"){
-        
+        P <- load.image("NewsLDA/CT/CT_Yao.png")
+        plot(P,axes = FALSE)
       }
     }
     
