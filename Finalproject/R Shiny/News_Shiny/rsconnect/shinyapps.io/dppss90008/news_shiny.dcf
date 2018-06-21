@@ -1,0 +1,10 @@
+name: news_shiny
+title:
+username:
+account: dppss90008
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 364108
+bundleId: 1440235
+url: https://dppss90008.shinyapps.io/news_shiny/
+when: 1529538131.58073
