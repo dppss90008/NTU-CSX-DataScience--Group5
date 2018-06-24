@@ -1,17 +1,28 @@
+---
+title: "TitanicVariable"
+author: "group5"
+date: "2018/6/25"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Read the titanicTrain data and store it in train
+```{r}
 library(magrittr)
 library(ggplot2)
-
-# Read the titanicTrain data and store it in train
-
 train <- read.csv("titanicTrain.csv")
 train <- train[c(1:1000),]
-
 # Train data 上面的NA
 str(train)
 sapply(train, function(x) {sum(is.na(x))})
+```
 
-
-# Pclass 
+## Pclass Variable
+```{r}
+# Pclass
 train$survived <- train$survived %>% as.factor()
 
 ggplot(train[!is.na(train$survived),], aes(x = pclass, fill = survived)) +
@@ -23,21 +34,27 @@ ggplot(train[!is.na(train$survived),], aes(x = pclass, fill = survived)) +
 ggplot(train[!is.na(train$survived),], aes(x = pclass, fill = survived )) +
   geom_bar(stat='count', position='dodge') + labs(x = 'Train data') +
   theme(legend.position="none") + theme_grey()
+```
 
-# Sex
+## Sex Variable
+```{r}
 ggplot(train[!is.na(train$survived),], aes(x = sex, fill = survived)) +
   geom_bar(stat='count', position='dodge') + theme_grey() +
   labs(x = 'Train data') +
   geom_label(stat='count', aes(label=..count..))
+```
 
-#Pclass & Sex
+## Pclass and Sex Variable
+```{r}
 ggplot(train[!is.na(train$survived),], aes(x = pclass, fill = survived)) +
   geom_bar(stat='count', position='stack') +
   labs(x = 'Train data ', y= "Count") + facet_grid(.~sex) +
   theme(legend.position="none") + theme_grey()
+```
 
 
-## embarked ##
+## Embarked Variable
+```{r}
 train$embarked <- train$embarked %>% as.factor
 summary(train$embarked[train$survived==0])
 summary(train$embarked[train$survived==1])
@@ -48,9 +65,10 @@ rownames(embark) <- c("0","1")
 barplot(embark,col=c("gray","black"),main="embarked variable",beside=TRUE,ylab="counts")
 legend("topright", inset=.02,title="Survive",
        c("0","1"), fill=c("gray","black"), horiz=TRUE, cex=0.8)
+```
 
-## family = sibsp + parch + 1  ##
-
+## family = sibsp + parch + 1
+```{r}
 family <- train$parch + train$sibsp + 1
 train <- cbind(train,family)
 
@@ -63,9 +81,10 @@ rm(ps1)
 barplot(family,col=c("gray","black"),main="family",beside=TRUE,ylab="counts",xlab="Number of people")
 legend("topright", inset=.02,title="Survive",
        c("0","1"), fill=c("gray","black"), horiz=TRUE, cex=0.8)
+```
 
 
-
+```{r}
 #load data
 train <- read.csv("titanicTrain.csv", stringsAsFactors = F, na.strings = c("NA", ""))
 test <- read.csv("titanicQuestion.csv", stringsAsFactors = F, na.strings = c("NA", ""))
@@ -75,13 +94,11 @@ all <- rbind(train, test)
 #as factor
 all$sex <- as.factor(all$sex)
 all$survived <- as.factor(all$survived)
+```
 
-#--------boat variables
-
+##　Boat Variable
+```{r}
 #plot b1, find out that the survived condition of "every boat"
-#plot b2, see if there's anyone who survived without boat
-# and who died on boat
-
 #first we rename all boats with number 1 to 28
 #tranfer original boat numbers to 1:27, 28 refer to NA  
 all$boat[all$boat == "5 7"] <- "17"
@@ -105,16 +122,22 @@ b1 <- ggplot(all[!is.na(all$survived),], aes(x = escape, fill = survived)) +
   geom_bar(stat='count', position='dodge') + theme_grey() +
   labs(x = 'escape from ship') +
   geom_label(stat='count', aes(label=..count..))
+b1
+```
 
+```{r}
+#plot b2, see if there's anyone who survived without boat
 #subset of those who took on boat
 survived_boat <- subset(all, all$boat != "28")
 #see if there anyone who took on boat and didn't survive 
 b2 <- ggplot(survived_boat[!is.na(survived_boat$survived),], aes(x = boat, fill = survived)) +
   geom_bar(stat='count', position='dodge') +
   labs(x = 'boat_survive') + theme_grey()
+b2
+```
 
-#-------what is the body variable tell us?
-
+## Body variable
+```{r}
 #replace those data to "0"(body info is NA) and "1"(body info isn't NA)
 all$body[is.na(all$body)] <- "0"
 all$body[all$body != "0"] <- "1"
@@ -127,6 +150,10 @@ have_body <- subset(all, all$body != "0")
 bo <- ggplot(have_body[!is.na(have_body$survived),], aes(x = body, fill = survived)) +
   geom_bar(stat='count', position='dodge') +
   labs(x = 'body_info') + theme_grey()
+bo
+```
+
+```{r}
 #=== there isn't any survivor has body data
 #=== regarding from bo, it seems those who have body info all died
 
@@ -135,6 +162,17 @@ bo_2 <-ggplot(all[!is.na(all$survived),], aes(x = body, fill = survived)) +
   geom_bar(stat='count', position='dodge') + theme_grey() +
   labs(x = 'body with death') +
   geom_label(stat='count', aes(label=..count..))
+bo_2
 #=== the outcomes of these 2 plots reveal that those who got body value was definitely dead
+
+
+```
+
+
+
+
+
+
+
 
 
