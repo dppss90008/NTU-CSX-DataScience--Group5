@@ -24,10 +24,8 @@ new_user_word(w1,user)
 #### 文字清理 ####
 
 # 使用測試資料
+# 要算情緒的檔案從這邊丟入
 Data <- read.csv("FB_result/Di_report.csv")
-Data <- Data[-64,]
-# 清除去年資照片
-
 
 # 套件引用
 library(NLP)
@@ -36,6 +34,7 @@ library(tm)
 library(plyr)
 
 # 文字清理
+# 選擇post欄位(輸入要做情緒分析的資料) >> 更改 Data$ ???
 docs <- Corpus(VectorSource(Data$post))
 toSpace <- content_transformer(function(x,pattern){
   return(gsub(pattern," ",x))
@@ -58,8 +57,6 @@ jieba_tokenizer = function(d){
   unlist(segment(d[[1]], w1))
 }
 
-
-
 seg = lapply(docs, jieba_tokenizer)
 
 # 計算情感分數
@@ -76,72 +73,12 @@ sentiment_point <- sapply(seg,function(d){
   return(Ct_pos/(Ct_pos+Ct_neg))
 })
 
-# 將NA改成0.5
+# 算分時候可能出現NA(此文章沒有正面也沒有負面)將NA改成0.5
 sentiment_point[sentiment_point %>% is.na] = 0.5
+
+# 算完分數的資料放回dataframe
 Data <- cbind(Data,sentiment_point)
 
-# 加上name
-name <- rep("Di", length(Data[,1]))
-Data <- cbind(name,Data)
-
-
-
-
-FB <- read.csv("FB_final.csv")
-
-FB <- FB[,-c(1,2,3,5)]
-# 畫折線圖
-library(ggplot2)
-colnames(FB)[11] = "sentiment"
-write.csv(FB,"FaceBookAPI-Taipei.csv")
-colnames(FB)
-ggplot(data=FB, aes(x=time%>% as.Date(), y=like, color=Candidate))+geom_point(size=1)+xlab("time")+scale_color_manual(values=c("blue", "green", "black"))
-
-
-
-
-
-
-
-
-
-Yao_like_time <- qplot(time%>% as.Date(),like, data = FB[FB$name=="Ko",],geom = c("point", "smooth"),xlab = "time",main = "姚文智 Facebook likes 累計圖 (一月到六月)")
-Ko_like_time <- qplot(time%>% as.Date(),like, data = Ko_data,geom = c("point", "smooth"),xlab = "time",main = "柯文哲 Facebook likes 累計圖 (一月到六月)")
-Di_like_time <- qplot(time%>% as.Date(),like, data = Di_data,geom = c("point", "smooth"),xlab = "time",main = "丁守中 Facebook likes 累計圖 (一月到六月)")
-  
-# box plot like 三人比較
-qplot(name,like, data = FB, geom = c("boxplot"),main="台北市候選人likes數box plot",ylim(0:1e+05))
-
-# box plot sentiment 文章風格
-qplot(name,sentiment_point, data = FB, geom = c("boxplot"),margins)
-
-# 三人分別angry 累計圖
-Yao_angry_time <- qplot(time%>% as.Date(),angry, data = Yao_data,geom = c("point", "smooth"),xlab = "time",main = "姚文智 Facebook angry 累計圖 (一月到六月)")
-Ko_angry_time <- qplot(time%>% as.Date(),angry, data = Ko_data,geom = c("point", "smooth"),xlab = "time",main = "柯文哲 Facebook angry 累計圖 (一月到六月)")
-Di_angry_time <- qplot(time%>% as.Date(),angry, data = Di_data,geom = c("point", "smooth"),xlab = "time",main = "丁守中 Facebook angry 累計圖 (一月到六月)")
-
-# box plot like 三人比較
-box_angry <- qplot(name,angry, data = FacebookAPI_res, geom = c("boxplot"),main="台北市候選人angry數box plot")
-
-
-
-# 三人分別share 累計圖
-Yao_share_time <- qplot(time%>% as.Date(),share, data = Yao_data,geom = c("point", "smooth"),xlab = "time",main = "姚文智 Facebook share 累計圖 (一月到六月)")
-Ko_share_time <- qplot(time%>% as.Date(),share, data = Ko_data,geom = c("point", "smooth"),xlab = "time",main = "柯文哲 Facebook share 累計圖 (一月到六月)")
-Di_share_time <- qplot(time%>% as.Date(),share, data = Di_data,geom = c("point", "smooth"),xlab = "time",main = "丁守中 Facebook share 累計圖 (一月到六月)")
-
-# box plot like 三人比較
-box_share <- qplot(name,share, data = FacebookAPI_res, geom = c("boxplot"),main="台北市候選人share數box plot")
-
-Ko <- FB[FB$name=="Ko",]
-Yao <- FB[FB$name=="Yao",]
-Di <- FB[FB$name=="Di",]
-name2 <- rep("柯文哲",137)
-Ko <- cbind(Ko,name2)
-FB <- rbind(Ko,Yao,Di)
-write.csv(FB,file="FB_final.csv")
-
-p <- ggplot(FB, aes(x=name2, y=share,color = name2)) + 
-  geom_boxplot(outlier.shape = NA)+ylim(low=0, high=1000)+scale_color_manual(values=c("gray", "green", "blue"))
-p
+# 此時可以輸出Data這個結果
+# 先做一些簡單的資料清理再輸出
 

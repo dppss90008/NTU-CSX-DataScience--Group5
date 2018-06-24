@@ -11,10 +11,6 @@ library(dplyr)
 #姚文智https://www.facebook.com/YaoTurningTaipei/
 #丁守中https://www.facebook.com/tingshouchung/
 
-##新北市##
-
-##台中市##
-
 ##測試使用##
 #enc.teia
 
@@ -25,9 +21,8 @@ FacebookID = "YaoTurningTaipei"
 ## 注意 : limit請設定25的倍數
 limit <- 300
 
-
 ##################################################################
-## 取得留言 ===== 停止開發
+## 取得每篇文章留言內容 ===== 停止開發<原因:資料量太大>
 
 # Crawl meassage data from facebookAPI(every post)
 
@@ -85,11 +80,15 @@ for(i in ismessageidx){
 
 
 
+
 ##################################################################
 ###### Crawl posts data <posts內容、分享、按讚> ##################
 ##################################################################
 
 # Crawl Posts data from facebookAPI 已完成開發
+# 程式碼說明: 此Function可以輸入粉絲專頁面帳號、要爬幾篇、token。取得posts
+# 包成Getpost function
+
 GetPost <- function(FacebookID,limit,token){
   url_1 = "https://graph.facebook.com/v3.0/"
   url_2 = "?fields=posts.limit("
@@ -113,13 +112,16 @@ GetPost <- function(FacebookID,limit,token){
   return(post_data)
 }
 
+# 執行程式碼
 Post_data <- GetPost(FacebookID,limit,token)
 
-#test <- Post_data %>% unlist() %>% data.frame()
+
 
 ##################################################################
 
 # get shares from every post 已完成開發
+# 程式碼說明: 取得每篇文章shares數
+# 包成function GetShare
 
 GetShare <- function(FacebookID,limit,token){
   url_1 = "https://graph.facebook.com/v3.0/"
@@ -137,11 +139,13 @@ GetShare <- function(FacebookID,limit,token){
   return(shareCT)
 }
 
+# 執行程式碼
 Share_data <- GetShare(FacebookID,limit,token)
 
 ###################################################################
 
 # get 讚!!like,love,wow,haha,sad,angry,thankful 已完成開發
+# 程式碼說明: 取得每篇文章情緒符號
 
 Getmood <- function(FacebookID,limit,token){
   url_1 = "https://graph.facebook.com/v3.0/"
@@ -216,20 +220,23 @@ Getmood <- function(FacebookID,limit,token){
   return(mood_res[1:temp_limit,])
 }
 
+# 執行程式碼
 Mood_data <- Getmood(FacebookID,limit,token)
-Mood_data <- Mood_data[1:290,]
+
+
 ###################################################################
 
-## 結果整合到 Report <data.frame>
+## 結果整合到 Report <data.frame>並且輸出
 
- Yao_Report <- cbind(Post_data,Share_data,Mood_data)
- colnames(Yao_Report) <- c("time","post","share","like","love","haha","sad","wow","angry")
- write.csv(Yao_Report,file="Yao_report.csv")
+ Report <- cbind(Post_data,Share_data,Mood_data)
+ colnames(Report) <- c("time","post","share","like","love","haha","sad","wow","angry")
+ write.csv(Report,file="report.csv")
 
- data <- read.csv("Ko_report.csv")
+ data <- read.csv("report.csv")
+ 
 ###################################################################
 
-## 建立粉專套件 Search_FB_post <function> >>> 停止開發
+## 建立粉專套件 Search_FB_post <function> >>> 停止開發 >> 好像只有柯文哲可以用
 # 引入參數 FacebookID,Token,limit
 # 參數說明 : FacebookID = 要搜尋粉專之ID
 #            limit = 要搜尋的post個數
@@ -257,5 +264,5 @@ FacebookID = "DoctorKoWJ"
 token = "EAACEdEose0cBAEIj72iMZAAPqk1uHjhQ0ptLBMRRye1i4mZBdArFRmOlNqoJZAxy8Of9sjmVpx26utPLl0tJGHCEOGsMJijCjqG0oeo9o76drtCy8Cm9FJ6ZA6KbsOmjNXvxBphtMlRxbGtpHOidFCPWycpnOqTFBzbPAepnQ2HUA8Pm9VsbGdlGWsWacvIZD"
 limit = 30
 
-Ko_FB_Report <- Search_FB_post(FacebookID,limit,token)
+Ko_Report <- Search_FB_post(FacebookID,limit,token)
 
