@@ -3,7 +3,7 @@ library(imager)
 library(shiny)
 library(ggplot2)
 library(magrittr)
-setwd("~/GitHub/NTU-CSX-DataScience--Group5/Finalproject/R Shiny/News_Shiny")
+
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
   
