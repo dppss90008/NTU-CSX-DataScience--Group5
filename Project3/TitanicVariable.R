@@ -12,16 +12,30 @@ sapply(train, function(x) {sum(is.na(x))})
 
 
 # Pclass 
+train$survived <- train$survived %>% as.factor()
+
 ggplot(train[!is.na(train$survived),], aes(x = pclass, fill = survived)) +
   geom_bar(stat='count', position='dodge') + labs(x = 'pClass') +
   theme(legend.position="none") + theme_grey() +
   geom_label(stat='count', aes(label=..count..))
-  
+
+
+ggplot(train[!is.na(train$survived),], aes(x = pclass, fill = survived )) +
+  geom_bar(stat='count', position='dodge') + labs(x = 'Train data') +
+  theme(legend.position="none") + theme_grey()
+
 # Sex
 ggplot(train[!is.na(train$survived),], aes(x = sex, fill = survived)) +
   geom_bar(stat='count', position='dodge') + theme_grey() +
   labs(x = 'Train data') +
   geom_label(stat='count', aes(label=..count..))
+
+#Pclass & Sex
+ggplot(train[!is.na(train$survived),], aes(x = pclass, fill = survived)) +
+  geom_bar(stat='count', position='stack') +
+  labs(x = 'Train data ', y= "Count") + facet_grid(.~sex) +
+  theme(legend.position="none") + theme_grey()
+
 
 ## embarked ##
 train$embarked <- train$embarked %>% as.factor

@@ -14,14 +14,16 @@ library(topicmodels)
 library(tidyr)
 library(stringr)
 library(tidytext)
+
+getwd()
+
 ```
 
 
 # Loading data
 ```{r}
-docs <- readRDS("data/toChinaSpeech.rds")
+docs <- readRDS("toChinaSpeech.rds")
 ```
-
 
 
 # Word segmentation
@@ -37,7 +39,7 @@ docs$words <- sapply(docs$content, function(x){tryCatch({cutter[x]}, error=funct
 # Loading stopWords
 ```{r}
 # Load stop words
-fin <- file("data/stopwords_tw.txt", open = "r")
+fin <- file("stopwords_tw.txt", open = "r")
 stopwords <- readLines(fin , encoding = "UTF8")
 stopwords <- unique(stopwords)
 
